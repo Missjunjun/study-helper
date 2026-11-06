@@ -1,0 +1,3017 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#4A90D9">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="学习小助手">
+  <title>学习小助手 - 孩子的学习伙伴</title>
+  <style>
+/* ========== 全局样式 ========== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+  --primary-color: #4A90D9;
+  --primary-dark: #357ABD;
+  --secondary-color: #F5A623;
+  --success-color: #7ED321;
+  --danger-color: #D0021B;
+  --bg-color: #F8F9FB;
+  --card-bg: #FFFFFF;
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --text-light: #999999;
+  --border-color: #E5E8ED;
+  --shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 4px 20px rgba(0, 0, 0, 0.12);
+  --radius: 12px;
+  --radius-lg: 16px;
+  --nav-height: 60px;
+  --header-height: 56px;
+}
+
+html, body {
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  font-size: 16px;
+  color: var(--text-primary);
+  background: var(--bg-color);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  min-height: 100vh;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* ========== 启动画面 ========== */
+.splash-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #4A90D9 0%, #63B3ED 50%, #F5A623 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  transition: opacity 0.5s ease;
+}
+
+.splash-screen.fade-out {
+  opacity: 0;
+}
+
+.splash-content {
+  text-align: center;
+  color: white;
+}
+
+.app-logo {
+  font-size: 80px;
+  margin-bottom: 20px;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}
+
+.splash-content h1 {
+  font-size: 28px;
+  margin-bottom: 8px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.splash-content p {
+  font-size: 16px;
+  opacity: 0.9;
+  margin-bottom: 30px;
+}
+
+.loading-bar {
+  width: 200px;
+  height: 4px;
+  background: rgba(255,255,255,0.3);
+  border-radius: 2px;
+  overflow: hidden;
+  margin: 0 auto;
+}
+
+.loading-progress {
+  width: 0%;
+  height: 100%;
+  background: white;
+  border-radius: 2px;
+  animation: loading 2s ease-out forwards;
+}
+
+@keyframes loading {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+
+/* ========== 主应用 ========== */
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  max-width: 800px;
+  margin: 0 auto;
+  background: var(--bg-color);
+}
+
+/* 平板优化 */
+@media (min-width: 768px) {
+  .app {
+    box-shadow: var(--shadow-lg);
+    min-height: 100vh;
+  }
+}
+
+/* ========== 顶部导航 ========== */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: var(--header-height);
+  background: var(--primary-color);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  box-shadow: 0 2px 8px rgba(74, 144, 217, 0.3);
+}
+
+.app-header h1 {
+  font-size: 18px;
+  font-weight: 600;
+  flex: 1;
+  text-align: center;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.icon-btn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: rgba(255,255,255,0.2);
+  border-radius: 50%;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.icon-btn:hover, .icon-btn:active {
+  background: rgba(255,255,255,0.3);
+}
+
+.timer-display {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255,255,255,0.2);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+.timer-icon {
+  font-size: 14px;
+}
+
+/* ========== 主内容 ========== */
+.app-main {
+  flex: 1;
+  padding: 16px;
+  padding-bottom: calc(var(--nav-height) + 20px);
+}
+
+.page {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ========== 首页 ========== */
+.welcome-section {
+  background: linear-gradient(135deg, #4A90D9, #63B3ED);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  color: white;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+}
+
+.welcome-greeting {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.streak-info {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.25);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+.streak-info strong {
+  font-size: 18px;
+}
+
+.stats-card {
+  display: flex;
+  justify-content: space-around;
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 20px 12px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+}
+
+.stat-item {
+  text-align: center;
+  flex: 1;
+}
+
+.stat-number {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: var(--text-primary);
+}
+
+.subject-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.subject-card {
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  padding: 24px 16px;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.subject-card:hover, .subject-card:active {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.subject-card.english {
+  background: linear-gradient(135deg, #56CCF2, #2F80ED);
+  color: white;
+}
+
+.subject-card.chinese {
+  background: linear-gradient(135deg, #F2994A, #F2C94C);
+  color: white;
+}
+
+.subject-icon {
+  font-size: 40px;
+  margin-bottom: 12px;
+}
+
+.subject-name {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.subject-desc {
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+.daily-goal {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow);
+}
+
+.goal-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.progress-bar {
+  height: 8px;
+  background: #E8E8E8;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+/* ========== 年级选择 ========== */
+.grade-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+@media (min-width: 768px) {
+  .grade-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.grade-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s, border-color 0.2s;
+  border: 2px solid transparent;
+}
+
+.grade-card:hover, .grade-card:active {
+  transform: scale(1.02);
+}
+
+.grade-card.selected {
+  border-color: var(--primary-color);
+  background: #EBF5FF;
+}
+
+.grade-number {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.grade-label {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* ========== 模式选择 ========== */
+.mode-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+@media (min-width: 768px) {
+  .mode-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.mode-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s;
+}
+
+.mode-card:hover, .mode-card:active {
+  transform: translateX(4px);
+}
+
+.mode-icon {
+  font-size: 32px;
+}
+
+.mode-name {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.mode-desc {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* ========== 练习页 ========== */
+.practice-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding: 0 4px;
+}
+
+.practice-progress {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.practice-score {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.practice-score span {
+  margin-left: 8px;
+}
+
+.practice-card {
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  padding: 32px 20px;
+  text-align: center;
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.practice-hint {
+  font-size: 14px;
+  color: var(--text-light);
+  margin-bottom: 16px;
+}
+
+.practice-question {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.practice-question.pinyin {
+  font-size: 20px;
+  color: var(--text-secondary);
+}
+
+.practice-phonetic {
+  font-size: 16px;
+  color: var(--text-secondary);
+  font-style: italic;
+  margin-top: 8px;
+}
+
+.speaker-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  margin-top: 12px;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+
+.speaker-btn:hover {
+  background: var(--bg-color);
+}
+
+/* 输入区域 */
+.practice-input-area {
+  margin-bottom: 20px;
+}
+
+.answer-input {
+  width: 100%;
+  padding: 16px;
+  font-size: 18px;
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius);
+  outline: none;
+  transition: border-color 0.2s;
+  font-family: inherit;
+}
+
+.answer-input:focus {
+  border-color: var(--primary-color);
+}
+
+.answer-input.correct {
+  border-color: var(--success-color);
+  background: #F0FBE4;
+}
+
+.answer-input.wrong {
+  border-color: var(--danger-color);
+  background: #FFECEC;
+}
+
+/* 选择题 */
+.choice-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.choice-btn {
+  padding: 16px;
+  background: var(--card-bg);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius);
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+  font-family: inherit;
+}
+
+.choice-btn:hover {
+  border-color: var(--primary-color);
+}
+
+.choice-btn.selected {
+  border-color: var(--primary-color);
+  background: #EBF5FF;
+}
+
+.choice-btn.correct {
+  border-color: var(--success-color);
+  background: #F0FBE4;
+  color: var(--success-color);
+}
+
+.choice-btn.wrong {
+  border-color: var(--danger-color);
+  background: #FFECEC;
+  color: var(--danger-color);
+}
+
+/* 课文填空 */
+.text-content {
+  font-size: 18px;
+  line-height: 2;
+  text-align: left;
+  padding: 0 8px;
+}
+
+.text-blank {
+  display: inline-block;
+  border-bottom: 2px solid var(--primary-color);
+  min-width: 60px;
+  text-align: center;
+  padding: 0 4px;
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.text-blank.filled {
+  color: var(--success-color);
+  border-color: var(--success-color);
+}
+
+.text-blank.wrong {
+  color: var(--danger-color);
+  border-color: var(--danger-color);
+}
+
+/* 操作按钮 */
+.practice-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.practice-actions .btn {
+  flex: 1;
+}
+
+/* ========== 按钮 ========== */
+.btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.btn-primary {
+  background: var(--primary-color);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+}
+
+.btn-secondary {
+  background: var(--bg-color);
+  color: var(--text-primary);
+  border: 2px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.btn-large {
+  padding: 16px 24px;
+  font-size: 18px;
+}
+
+.btn-small {
+  padding: 6px 14px;
+  font-size: 14px;
+}
+
+.btn-danger {
+  background: var(--danger-color);
+  color: white;
+}
+
+.btn-danger:hover {
+  background: #B00018;
+}
+
+.btn-full {
+  width: 100%;
+  margin-top: 20px;
+}
+
+/* ========== 结果页 ========== */
+.result-container {
+  text-align: center;
+  padding: 20px;
+}
+
+.result-emoji {
+  font-size: 80px;
+  margin-bottom: 16px;
+}
+
+.result-title {
+  font-size: 24px;
+  margin-bottom: 24px;
+}
+
+.result-stats {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.result-stat {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  box-shadow: var(--shadow);
+}
+
+.result-stat.highlight {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: white;
+}
+
+.result-number {
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.result-label {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.result-list {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow);
+  text-align: left;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.result-item {
+  padding: 12px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.result-item:last-child {
+  border-bottom: none;
+}
+
+.result-item .question {
+  font-size: 16px;
+  font-weight: 500;
+  flex: 1;
+}
+
+.result-item .answers {
+  text-align: right;
+  font-size: 14px;
+}
+
+.result-item .user-answer {
+  color: var(--danger-color);
+}
+
+.result-item .correct-answer {
+  color: var(--success-color);
+}
+
+.result-item .status {
+  margin-left: 8px;
+  font-size: 20px;
+}
+
+.result-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.result-actions .btn {
+  flex: 1;
+}
+
+/* ========== 家长面板 ========== */
+.parent-section {
+  margin-bottom: 24px;
+}
+
+.parent-section h2 {
+  font-size: 18px;
+  margin-bottom: 16px;
+  padding-left: 4px;
+}
+
+.setting-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.setting-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.setting-row:last-child {
+  border-bottom: none;
+}
+
+.setting-row select {
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 14px;
+  background: white;
+  font-family: inherit;
+}
+
+.toggle-row {
+  align-items: center;
+}
+
+.toggle {
+  position: relative;
+  width: 50px;
+  height: 28px;
+}
+
+.toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.3s;
+  border-radius: 28px;
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 22px;
+  width: 22px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.3s;
+  border-radius: 50%;
+}
+
+.toggle input:checked + .toggle-slider {
+  background-color: var(--primary-color);
+}
+
+.toggle input:checked + .toggle-slider:before {
+  transform: translateX(22px);
+}
+
+/* 图表 */
+.stats-chart {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow);
+}
+
+.chart-title {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+.bar-chart {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  height: 120px;
+  padding: 0 4px;
+}
+
+.bar-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.bar {
+  width: 24px;
+  background: linear-gradient(180deg, var(--primary-color), var(--secondary-color));
+  border-radius: 4px 4px 0 0;
+  min-height: 4px;
+  transition: height 0.5s ease;
+}
+
+.bar-label {
+  font-size: 11px;
+  color: var(--text-light);
+}
+
+/* ========== 底部导航 ========== */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-width: 800px;
+  margin: 0 auto;
+  height: var(--nav-height);
+  background: white;
+  display: flex;
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.08);
+  z-index: 100;
+}
+
+.nav-item {
+  flex: 1;
+  background: none;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  cursor: pointer;
+  color: var(--text-light);
+  transition: color 0.2s;
+  font-family: inherit;
+}
+
+.nav-item.active {
+  color: var(--primary-color);
+}
+
+.nav-icon {
+  font-size: 22px;
+}
+
+.nav-label {
+  font-size: 11px;
+}
+
+/* ========== 弹窗 ========== */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  animation: fadeIn 0.2s;
+}
+
+.modal-content {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: 28px 24px;
+  max-width: 380px;
+  width: 100%;
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+}
+
+.modal-content h2 {
+  margin-bottom: 16px;
+  font-size: 20px;
+}
+
+.modal-content p {
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.modal-content input {
+  width: 100%;
+  padding: 14px;
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius);
+  font-size: 16px;
+  margin-bottom: 12px;
+  outline: none;
+  transition: border-color 0.2s;
+  font-family: inherit;
+}
+
+.modal-content input:focus {
+  border-color: var(--primary-color);
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.modal-buttons .btn {
+  flex: 1;
+}
+
+.hint {
+  font-size: 12px;
+  color: var(--text-light);
+  margin-top: 12px;
+}
+
+/* 休息弹窗 */
+.break-modal {
+  background: linear-gradient(135deg, #FFE5B4, #FFD700);
+}
+
+.break-emoji {
+  font-size: 60px;
+  margin-bottom: 16px;
+}
+
+.break-modal h2 {
+  color: #8B4513;
+}
+
+.break-timer {
+  font-size: 48px;
+  font-weight: 700;
+  color: #8B4513;
+  margin: 16px 0;
+}
+
+/* 时间到弹窗 */
+.time-up-modal {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+}
+
+.time-up-modal h2, .time-up-modal p {
+  color: white;
+}
+
+.time-up-emoji {
+  font-size: 60px;
+  margin-bottom: 16px;
+}
+
+/* ========== Toast ========== */
+.toast {
+  position: fixed;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.8);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 24px;
+  font-size: 14px;
+  z-index: 2000;
+  animation: toastIn 0.3s;
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* ========== 答案反馈 ========== */
+.feedback-correct {
+  color: var(--success-color);
+  font-size: 18px;
+  margin-top: 8px;
+}
+
+.feedback-wrong {
+  color: var(--danger-color);
+  font-size: 18px;
+  margin-top: 8px;
+}
+
+.show-answer-text {
+  font-size: 20px;
+  color: var(--primary-color);
+  margin-top: 12px;
+  font-weight: 500;
+}
+
+/* ========== 响应式优化 ========== */
+@media (min-width: 768px) {
+  .app-header h1 {
+    font-size: 22px;
+  }
+  
+  .welcome-greeting {
+    font-size: 26px;
+  }
+  
+  .subject-icon {
+    font-size: 48px;
+  }
+  
+  .practice-question {
+    font-size: 36px;
+  }
+  
+  .answer-input {
+    font-size: 22px;
+    padding: 20px;
+  }
+  
+  .btn {
+    padding: 14px 28px;
+    font-size: 18px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .app {
+    max-width: 900px;
+  }
+  
+  .grade-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ========== 安全区域 ========== */
+@supports (padding: max(0px)) {
+  .app-header {
+    padding-top: max(0px, env(safe-area-inset-top));
+    height: calc(var(--header-height) + env(safe-area-inset-top));
+  }
+  
+  .bottom-nav {
+    padding-bottom: max(0px, env(safe-area-inset-bottom));
+    height: calc(var(--nav-height) + env(safe-area-inset-bottom));
+  }
+  
+  .app-main {
+    padding-bottom: calc(var(--nav-height) + env(safe-area-inset-bottom) + 20px);
+  }
+}
+
+/* ========== 动画 ========== */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+.shake {
+  animation: shake 0.3s;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.pulse {
+  animation: pulse 0.3s;
+}
+
+</style>
+</head>
+<body>
+  <!-- 启动画面 -->
+  <div id="splash-screen" class="splash-screen">
+    <div class="splash-content">
+      <div class="app-logo">📚</div>
+      <h1>学习小助手</h1>
+      <p>孩子的专属学习伙伴</p>
+      <div class="loading-bar">
+        <div class="loading-progress"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 家长密码验证弹窗 -->
+  <div id="parent-modal" class="modal hidden">
+    <div class="modal-content">
+      <h2>🔐 家长验证</h2>
+      <p>请输入家长密码</p>
+      <input type="password" id="parent-password" placeholder="默认密码: 123456">
+      <div class="modal-buttons">
+        <button class="btn btn-secondary" onclick="closeParentModal()">取消</button>
+        <button class="btn btn-primary" onclick="verifyParent()">确认</button>
+      </div>
+      <p class="hint" id="password-hint">首次使用请设置家长密码</p>
+    </div>
+  </div>
+
+  <!-- 设置家长密码弹窗 -->
+  <div id="set-password-modal" class="modal hidden">
+    <div class="modal-content">
+      <h2>🔐 设置家长密码</h2>
+      <p>请设置6-12位数字密码</p>
+      <input type="password" id="new-password" placeholder="输入新密码" maxlength="12">
+      <input type="password" id="confirm-password" placeholder="确认新密码" maxlength="12">
+      <div class="modal-buttons">
+        <button class="btn btn-secondary" onclick="closeSetPasswordModal()">取消</button>
+        <button class="btn btn-primary" onclick="setParentPassword()">确认设置</button>
+      </div>
+      <p class="hint" id="set-password-hint"></p>
+    </div>
+  </div>
+
+  <!-- 主应用 -->
+  <div id="app" class="app hidden">
+    <!-- 顶部状态栏 -->
+    <header class="app-header">
+      <button class="icon-btn" id="back-btn" onclick="goBack()" style="display:none">
+        <span class="icon">←</span>
+      </button>
+      <h1 id="page-title">学习小助手</h1>
+      <div class="header-right">
+        <div class="timer-display" id="timer-display">
+          <span class="timer-icon">⏱️</span>
+          <span id="time-remaining">--:--</span>
+        </div>
+        <button class="icon-btn" onclick="openParentPanel()">
+          <span class="icon">⚙️</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="app-main" id="app-main">
+      <!-- 首页 -->
+      <section class="page" id="page-home">
+        <div class="welcome-section">
+          <div class="welcome-greeting">
+            <span id="greeting-text">你好，小朋友！</span>
+          </div>
+          <div class="streak-info">
+            <span class="streak-icon">🔥</span>
+            <span>连续学习 <strong id="streak-count">0</strong> 天</span>
+          </div>
+        </div>
+
+        <div class="stats-card">
+          <div class="stat-item">
+            <div class="stat-number" id="total-words">0</div>
+            <div class="stat-label">已学单词</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" id="total-correct">0</div>
+            <div class="stat-label">答对次数</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" id="total-time">0分钟</div>
+            <div class="stat-label">累计学习</div>
+          </div>
+        </div>
+
+        <div class="section-title">选择学习内容</div>
+
+        <div class="subject-grid">
+          <div class="subject-card english" onclick="selectSubject('english')">
+            <div class="subject-icon">📖</div>
+            <div class="subject-name">英语学习</div>
+            <div class="subject-desc">单词默写 · 听音练习</div>
+          </div>
+          <div class="subject-card chinese" onclick="selectSubject('chinese')">
+            <div class="subject-icon">✍️</div>
+            <div class="subject-name">语文学习</div>
+            <div class="subject-desc">生字默写 · 课文背诵</div>
+          </div>
+        </div>
+
+        <div class="daily-goal">
+          <div class="goal-header">
+            <span>今日学习目标</span>
+            <span id="goal-progress">0 / 20</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="goal-fill" style="width: 0%"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 科目选择页 -->
+      <section class="page hidden" id="page-subject">
+        <div class="grade-select">
+          <div class="section-title" id="grade-title">选择年级</div>
+          <div class="grade-grid" id="grade-grid"></div>
+        </div>
+
+        <div class="mode-select hidden" id="mode-select">
+          <div class="section-title">选择练习模式</div>
+          <div class="mode-grid">
+            <div class="mode-card" onclick="startPractice('word-dictation')">
+              <div class="mode-icon">📝</div>
+              <div class="mode-name">单词默写</div>
+              <div class="mode-desc">看中文写单词</div>
+            </div>
+            <div class="mode-card" onclick="startPractice('word-practice')">
+              <div class="mode-icon">🎯</div>
+              <div class="mode-name">单词练习</div>
+              <div class="mode-desc">选择正确释义</div>
+            </div>
+            <div class="mode-card hidden" id="text-dictation-card" onclick="startPractice('text-dictation')">
+              <div class="mode-icon">📜</div>
+              <div class="mode-name">课文默写</div>
+              <div class="mode-desc">段落填空练习</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 练习页 -->
+      <section class="page hidden" id="page-practice">
+        <div class="practice-header">
+          <div class="practice-progress">
+            <span id="current-index">1</span> / <span id="total-count">10</span>
+          </div>
+          <div class="practice-score">
+            ✓ <span id="correct-count">0</span>
+            ✗ <span id="wrong-count">0</span>
+          </div>
+        </div>
+
+        <div class="practice-card" id="practice-card">
+          <!-- 动态内容 -->
+        </div>
+
+        <div class="practice-input-area" id="practice-input-area">
+          <!-- 动态输入区域 -->
+        </div>
+
+        <div class="practice-actions">
+          <button class="btn btn-secondary" onclick="showAnswer()">看答案</button>
+          <button class="btn btn-primary btn-large" onclick="submitAnswer()">提交答案</button>
+        </div>
+      </section>
+
+      <!-- 结果页 -->
+      <section class="page hidden" id="page-result">
+        <div class="result-container">
+          <div class="result-emoji" id="result-emoji">🎉</div>
+          <h2 class="result-title" id="result-title">练习完成！</h2>
+          <div class="result-stats">
+            <div class="result-stat">
+              <div class="result-number" id="result-correct">0</div>
+              <div class="result-label">答对</div>
+            </div>
+            <div class="result-stat">
+              <div class="result-number" id="result-wrong">0</div>
+              <div class="result-label">答错</div>
+            </div>
+            <div class="result-stat highlight">
+              <div class="result-number" id="result-rate">0%</div>
+              <div class="result-label">正确率</div>
+            </div>
+          </div>
+
+          <div class="result-list" id="result-list"></div>
+
+          <div class="result-actions">
+            <button class="btn btn-secondary" onclick="goHome()">返回首页</button>
+            <button class="btn btn-primary" onclick="restartPractice()">再来一次</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 家长面板 -->
+      <section class="page hidden" id="page-parent">
+        <div class="parent-section">
+          <h2>⏰ 使用时间控制</h2>
+          <div class="setting-card">
+            <div class="setting-row">
+              <span>每日允许使用时长</span>
+              <select id="daily-limit">
+                <option value="15">15分钟</option>
+                <option value="30">30分钟</option>
+                <option value="45">45分钟</option>
+                <option value="60" selected>60分钟</option>
+                <option value="90">90分钟</option>
+                <option value="120">120分钟</option>
+                <option value="0">不限制</option>
+              </select>
+            </div>
+            <div class="setting-row">
+              <span>休息提醒间隔</span>
+              <select id="break-interval">
+                <option value="15">每15分钟</option>
+                <option value="20" selected>每20分钟</option>
+                <option value="30">每30分钟</option>
+                <option value="45">每45分钟</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="parent-section">
+          <h2>📊 学习统计</h2>
+          <div class="stats-chart">
+            <div class="chart-title">最近7天学习时长</div>
+            <div class="bar-chart" id="weekly-chart"></div>
+          </div>
+        </div>
+
+        <div class="parent-section">
+          <h2>⚙️ 其他设置</h2>
+          <div class="setting-card">
+            <div class="setting-row toggle-row">
+              <span>显示学习提醒</span>
+              <label class="toggle">
+                <input type="checkbox" id="show-reminder" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div class="setting-row toggle-row">
+              <span>语音朗读功能</span>
+              <label class="toggle">
+                <input type="checkbox" id="voice-enabled" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div class="setting-row">
+              <span>修改家长密码</span>
+              <button class="btn btn-small" onclick="openSetPasswordModal()">修改</button>
+            </div>
+            <div class="setting-row">
+              <span>清除学习数据</span>
+              <button class="btn btn-small btn-danger" onclick="clearData()">清除</button>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-full" onclick="saveParentSettings()">保存设置</button>
+      </section>
+    </main>
+
+    <!-- 休息提醒弹窗 -->
+    <div id="break-modal" class="modal hidden">
+      <div class="modal-content break-modal">
+        <div class="break-emoji">☕</div>
+        <h2>该休息啦！</h2>
+        <p>学习了这么久，让眼睛休息一下吧~</p>
+        <div class="break-timer" id="break-timer-display">00:30</div>
+        <button class="btn btn-primary" onclick="skipBreak()">我知道了</button>
+      </div>
+    </div>
+
+    <!-- 时间用尽弹窗 -->
+    <div id="time-up-modal" class="modal hidden">
+      <div class="modal-content time-up-modal">
+        <div class="time-up-emoji">⏰</div>
+        <h2>今日学习时间已用完</h2>
+        <p id="time-up-text">明天再来继续学习吧！</p>
+        <button class="btn btn-primary" onclick="closeTimeUpModal()">好的</button>
+      </div>
+    </div>
+
+    <!-- 底部导航 -->
+    <nav class="bottom-nav">
+      <button class="nav-item active" onclick="navigateTo('home')">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-label">首页</span>
+      </button>
+      <button class="nav-item" onclick="navigateTo('subject')">
+        <span class="nav-icon">📚</span>
+        <span class="nav-label">学习</span>
+      </button>
+      <button class="nav-item" onclick="openParentPanel()">
+        <span class="nav-icon">⚙️</span>
+        <span class="nav-label">家长</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- Toast提示 -->
+  <div id="toast" class="toast hidden"></div>
+
+  <script>
+// ===== 词库数据（内嵌，无需联网）=====
+window.__ENGLISH_DATA__ = {
+  "grades": {
+    "grade3": {
+      "name": "三年级",
+      "words": [
+        {"word": "apple", "meaning": "苹果", "phonetic": "/ˈæpl/"},
+        {"word": "banana", "meaning": "香蕉", "phonetic": "/bəˈnænə/"},
+        {"word": "cat", "meaning": "猫", "phonetic": "/kæt/"},
+        {"word": "dog", "meaning": "狗", "phonetic": "/dɒɡ/"},
+        {"word": "egg", "meaning": "鸡蛋", "phonetic": "/eɡ/"},
+        {"word": "fish", "meaning": "鱼", "phonetic": "/fɪʃ/"},
+        {"word": "girl", "meaning": "女孩", "phonetic": "/ɡɜːl/"},
+        {"word": "hat", "meaning": "帽子", "phonetic": "/hæt/"},
+        {"word": "ice", "meaning": "冰", "phonetic": "/aɪs/"},
+        {"word": "jump", "meaning": "跳", "phonetic": "/dʒʌmp/"},
+        {"word": "kite", "meaning": "风筝", "phonetic": "/kaɪt/"},
+        {"word": "lion", "meaning": "狮子", "phonetic": "/ˈlaɪən/"},
+        {"word": "monkey", "meaning": "猴子", "phonetic": "/ˈmʌŋki/"},
+        {"word": "nose", "meaning": "鼻子", "phonetic": "/nəʊz/"},
+        {"word": "orange", "meaning": "橙子", "phonetic": "/ˈɒrɪndʒ/"},
+        {"word": "pig", "meaning": "猪", "phonetic": "/pɪɡ/"},
+        {"word": "queen", "meaning": "女王", "phonetic": "/kwiːn/"},
+        {"word": "rabbit", "meaning": "兔子", "phonetic": "/ˈræbɪt/"},
+        {"word": "sun", "meaning": "太阳", "phonetic": "/sʌn/"},
+        {"word": "tiger", "meaning": "老虎", "phonetic": "/ˈtaɪɡə/"}
+      ]
+    },
+    "grade4": {
+      "name": "四年级",
+      "words": [
+        {"word": "beautiful", "meaning": "美丽的", "phonetic": "/ˈbjuːtɪfl/"},
+        {"word": "computer", "meaning": "电脑", "phonetic": "/kəmˈpjuːtə/"},
+        {"word": "different", "meaning": "不同的", "phonetic": "/ˈdɪfrənt/"},
+        {"word": "elephant", "meaning": "大象", "phonetic": "/ˈelɪfənt/"},
+        {"word": "favorite", "meaning": "最喜欢的", "phonetic": "/ˈfeɪvərɪt/"},
+        {"word": "garden", "meaning": "花园", "phonetic": "/ˈɡɑːdn/"},
+        {"word": "happy", "meaning": "快乐的", "phonetic": "/ˈhæpi/"},
+        {"word": "important", "meaning": "重要的", "phonetic": "/ɪmˈpɔːtnt/"},
+        {"word": "kitchen", "meaning": "厨房", "phonetic": "/ˈkɪtʃɪn/"},
+        {"word": "library", "meaning": "图书馆", "phonetic": "/ˈlaɪbrəri/"},
+        {"word": "mountain", "meaning": "山", "phonetic": "/ˈmaʊntɪn/"},
+        {"word": "natural", "meaning": "自然的", "phonetic": "/ˈnætʃrəl/"},
+        {"word": "ocean", "meaning": "海洋", "phonetic": "/ˈəʊʃn/"},
+        {"word": "parent", "meaning": "父母", "phonetic": "/ˈpeərənt/"},
+        {"word": "question", "meaning": "问题", "phonetic": "/ˈkwestʃən/"},
+        {"word": "remember", "meaning": "记住", "phonetic": "/rɪˈmembə/"},
+        {"word": "student", "meaning": "学生", "phonetic": "/ˈstjuːdnt/"},
+        {"word": "teacher", "meaning": "老师", "phonetic": "/ˈtiːtʃə/"},
+        {"word": "umbrella", "meaning": "雨伞", "phonetic": "/ʌmˈbrelə/"},
+        {"word": "village", "meaning": "村庄", "phonetic": "/ˈvɪlɪdʒ/"}
+      ]
+    },
+    "grade5": {
+      "name": "五年级",
+      "words": [
+        {"word": "adventure", "meaning": "冒险", "phonetic": "/ədˈventʃə/"},
+        {"word": "believe", "meaning": "相信", "phonetic": "/bɪˈliːv/"},
+        {"word": "celebrate", "meaning": "庆祝", "phonetic": "/ˈselɪbreɪt/"},
+        {"word": "discover", "meaning": "发现", "phonetic": "/dɪˈskʌvə/"},
+        {"word": "environment", "meaning": "环境", "phonetic": "/ɪnˈvaɪrənmənt/"},
+        {"word": "famous", "meaning": "著名的", "phonetic": "/ˈfeɪməs/"},
+        {"word": "government", "meaning": "政府", "phonetic": "/ˈɡʌvənmənt/"},
+        {"word": "hospital", "meaning": "医院", "phonetic": "/ˈhɒspɪtl/"},
+        {"word": "imagine", "meaning": "想象", "phonetic": "/ɪˈmædʒɪn/"},
+        {"word": "journey", "meaning": "旅程", "phonetic": "/ˈdʒɜːni/"},
+        {"word": "knowledge", "meaning": "知识", "phonetic": "/ˈnɒlɪdʒ/"},
+        {"word": "language", "meaning": "语言", "phonetic": "/ˈlæŋɡwɪdʒ/"},
+        {"word": "mystery", "meaning": "神秘", "phonetic": "/ˈmɪstri/"},
+        {"word": "neighbor", "meaning": "邻居", "phonetic": "/ˈneɪbə/"},
+        {"word": "opportunity", "meaning": "机会", "phonetic": "/ˌɒpəˈtjuːnəti/"},
+        {"word": "patient", "meaning": "耐心的", "phonetic": "/ˈpeɪʃnt/"},
+        {"word": "quality", "meaning": "质量", "phonetic": "/ˈkwɒləti/"},
+        {"word": "realize", "meaning": "意识到", "phonetic": "/ˈrɪəlaɪz/"},
+        {"word": "successful", "meaning": "成功的", "phonetic": "/səkˈsesfl/"},
+        {"word": "technology", "meaning": "技术", "phonetic": "/tekˈnɒlədʒi/"}
+      ]
+    },
+    "grade6": {
+      "name": "六年级",
+      "words": [
+        {"word": "achievement", "meaning": "成就", "phonetic": "/əˈtʃiːvmənt/"},
+        {"word": "benefit", "meaning": "好处", "phonetic": "/ˈbenɪfɪt/"},
+        {"word": "communicate", "meaning": "交流", "phonetic": "/kəˈmjuːnɪkeɪt/"},
+        {"word": "development", "meaning": "发展", "phonetic": "/dɪˈveləpmənt/"},
+        {"word": "education", "meaning": "教育", "phonetic": "/ˌedʒuˈkeɪʃn/"},
+        {"word": "experience", "meaning": "经验", "phonetic": "/ɪkˈspɪəriəns/"},
+        {"word": "freedom", "meaning": "自由", "phonetic": "/ˈfriːdəm/"},
+        {"word": "generous", "meaning": "慷慨的", "phonetic": "/ˈdʒenərəs/"},
+        {"word": "hesitate", "meaning": "犹豫", "phonetic": "/ˈhezɪteɪt/"},
+        {"word": "independent", "meaning": "独立的", "phonetic": "/ˌɪndɪˈpendənt/"},
+        {"word": "journey", "meaning": "旅行", "phonetic": "/ˈdʒɜːni/"},
+        {"word": "kindness", "meaning": "善良", "phonetic": "/ˈkaɪndnəs/"},
+        {"word": "literature", "meaning": "文学", "phonetic": "/ˈlɪtrətʃə/"},
+        {"word": "maturity", "meaning": "成熟", "phonetic": "/məˈtʃʊərəti/"},
+        {"word": "necessity", "meaning": "必要", "phonetic": "/nəˈsesəti/"},
+        {"word": "obstacle", "meaning": "障碍", "phonetic": "/ˈɒbstəkl/"},
+        {"word": "perseverance", "meaning": "毅力", "phonetic": "/ˌpɜːsɪˈvɪərəns/"},
+        {"word": "responsibility", "meaning": "责任", "phonetic": "/rɪˌspɒnsəˈbɪləti/"},
+        {"word": "sincere", "meaning": "真诚的", "phonetic": "/sɪnˈsɪə/"},
+        {"word": "traditional", "meaning": "传统的", "phonetic": "/trəˈdɪʃənl/"}
+      ]
+    }
+  }
+};
+window.__CHINESE_DATA__ = {
+  "grades": {
+    "grade3": {
+      "name": "三年级",
+      "words": [
+        {"word": "早晨", "pinyin": "zǎo chén", "meaning": "清早，天亮的时候"},
+        {"word": "鲜艳", "pinyin": "xiān yàn", "meaning": "颜色鲜明而美丽"},
+        {"word": "服装", "pinyin": "fú zhuāng", "meaning": "衣服鞋帽的总称"},
+        {"word": "打扮", "pinyin": "dǎ bàn", "meaning": "装饰、装扮"},
+        {"word": "敬爱", "pinyin": "jìng ài", "meaning": "尊敬热爱"},
+        {"word": "国旗", "pinyin": "guó qí", "meaning": "代表国家的旗帜"},
+        {"word": "敬礼", "pinyin": "jìng lǐ", "meaning": "表示尊敬的礼仪"},
+        {"word": "教室", "pinyin": "jiào shì", "meaning": "学校里上课的房间"},
+        {"word": "树枝", "pinyin": "shù zhī", "meaning": "树的枝条"},
+        {"word": "好奇", "pinyin": "hào qí", "meaning": "对事物感到新鲜而想要了解"},
+        {"word": "招引", "pinyin": "zhāo yǐn", "meaning": "用动作、声响或色、香、味等吸引"},
+        {"word": "粗壮", "pinyin": "cū zhuàng", "meaning": "粗大结实"},
+        {"word": "枝干", "pinyin": "zhī gàn", "meaning": "树枝和树干"},
+        {"word": "影子", "pinyin": "yǐng zi", "meaning": "光线照射物体后形成的阴影"},
+        {"word": "落下", "pinyin": "luò xià", "meaning": "掉下、下降"}
+      ],
+      "texts": [
+        {
+          "title": "《我们的民族小学》节选",
+          "content": "早晨，从山坡上，从坪坝里，从一条条开着绒球花和太阳花的小路上，走来了许多小学生，有汉族的，有傣族的，有景颇族的，还有阿昌族和德昂族的。大家穿戴不同，来到学校，都成了好朋友。那鲜艳的民族服装，把学校打扮得更加绚丽多彩。同学们向在校园里欢唱的小鸟打招呼，向敬爱的老师问好，向高高飘扬的国旗敬礼。"
+        },
+        {
+          "title": "《秋天的雨》节选",
+          "content": "秋天的雨，是一把钥匙。它带着清凉和温柔，轻轻地，轻轻地，趁你没留意，把秋天的大门打开了。秋天的雨，有一盒五彩缤纷的颜料。你看，它把黄色给了银杏树，黄黄的叶子像一把把小扇子，扇哪扇哪，扇走了夏天的炎热。"
+        }
+      ]
+    },
+    "grade4": {
+      "name": "四年级",
+      "words": [
+        {"word": "宽阔", "pinyin": "kuān kuò", "meaning": "面积大，范围广"},
+        {"word": "笼罩", "pinyin": "lǒng zhào", "meaning": "像笼子一样罩在上面"},
+        {"word": "盼望", "pinyin": "pàn wàng", "meaning": "殷切地期望"},
+        {"word": "顿时", "pinyin": "dùn shí", "meaning": "立刻、马上"},
+        {"word": "逐渐", "pinyin": "zhú jiàn", "meaning": "渐渐、逐步"},
+        {"word": "犹如", "pinyin": "yóu rú", "meaning": "好像、如同"},
+        {"word": "依旧", "pinyin": "yī jiù", "meaning": "照旧、仍然"},
+        {"word": "神秘", "pinyin": "shén mì", "meaning": "难以捉摸，高深莫测"},
+        {"word": "壮观", "pinyin": "zhuàng guān", "meaning": "雄伟的景象"},
+        {"word": "灿烂", "pinyin": "càn làn", "meaning": "光彩鲜明耀眼"},
+        {"word": "规律", "pinyin": "guī lǜ", "meaning": "事物之间的内在联系"},
+        {"word": "缝隙", "pinyin": "fèng xì", "meaning": "裂开或自然露出的狭长空隙"},
+        {"word": "照耀", "pinyin": "zhào yào", "meaning": "光线照射"},
+        {"word": "颤动", "pinyin": "chàn dòng", "meaning": "轻微地振动"},
+        {"word": "榕树", "pinyin": "róng shù", "meaning": "一种常绿大乔木"}
+      ],
+      "texts": [
+        {
+          "title": "《观潮》节选",
+          "content": "钱塘江大潮，自古以来被称为天下奇观。农历八月十八是一年一度的观潮日。这一天早上，我们来到了海宁市的盐官镇，据说这里是观潮最好的地方。我们随着观潮的人群，登上了海塘大堤。宽阔的钱塘江横卧在眼前。江面很平静，越往东越宽，在雨后的阳光下，笼罩着一层蒙蒙的薄雾。镇海古塔、中山亭和观潮台屹立在江边。远处，几座小山在云雾中若隐若现。"
+        },
+        {
+          "title": "《爬山虎的脚》节选",
+          "content": "爬山虎刚长出来的叶子是嫩红的，不几天叶子长大，就变成嫩绿的。爬山虎的嫩叶，不大引人注意，引人注意的是长大了的叶子。那些叶子绿得那么新鲜，看着非常舒服。叶尖一顺儿朝下，在墙上铺得那么均匀，没有重叠起来的，也不留一点儿空隙。一阵风拂过，一墙的叶子就漾起波纹，好看得很。"
+        }
+      ]
+    },
+    "grade5": {
+      "name": "五年级",
+      "words": [
+        {"word": "尴尬", "pinyin": "gān gà", "meaning": "处境困难，不好处理"},
+        {"word": "天赋", "pinyin": "tiān fù", "meaning": "自然赋予，生来就具备"},
+        {"word": "轻盈", "pinyin": "qīng yíng", "meaning": "轻柔优美"},
+        {"word": "陶醉", "pinyin": "táo zuì", "meaning": "沉浸在某种境界或思想活动中"},
+        {"word": "羞愧", "pinyin": "xiū kuì", "meaning": "感到羞耻和惭愧"},
+        {"word": "慈祥", "pinyin": "cí xiáng", "meaning": "态度、神色和蔼安详"},
+        {"word": "破烂", "pinyin": "pò làn", "meaning": "破旧、损坏"},
+        {"word": "忙碌", "pinyin": "máng lù", "meaning": "事情多，不得闲"},
+        {"word": "谨慎", "pinyin": "jǐn shèn", "meaning": "对外界事物或自己的言行格外注意"},
+        {"word": "宝贵", "pinyin": "bǎo guì", "meaning": "极有价值，非常难得"},
+        {"word": "启示", "pinyin": "qǐ shì", "meaning": "启发提示，使有所领悟"},
+        {"word": "剧烈", "pinyin": "jù liè", "meaning": "猛烈、强烈"},
+        {"word": "沮丧", "pinyin": "jǔ sàng", "meaning": "灰心失望"},
+        {"word": "诱惑", "pinyin": "yòu huò", "meaning": "吸引、招引"},
+        {"word": "皎洁", "pinyin": "jiǎo jié", "meaning": "明亮洁白"}
+      ],
+      "texts": [
+        {
+          "title": "《钓鱼的启示》节选",
+          "content": "鲈鱼捕捞开放日的前一个傍晚，我和父亲分别放好鱼饵，然后举起鱼竿，把钓线抛了出去。晚霞辉映的湖面上溅起了一圈圈彩色的涟漪。不一会儿，月亮升起来了，湖面变得银光闪闪。过了好长时间，鱼竿突然剧烈地抖动了一下，一定是个大家伙上钩了。我小心翼翼地一收一放，熟练地操纵着。也许是鱼想摆脱我的鱼钩，不停地甩动着鱼尾并跳跃着，湖面上不时发出'啪啪'的声音，溅起不少水花。"
+        },
+        {
+          "title": "《慈母情深》节选",
+          "content": "我穿过一排排缝纫机，走到那个角落，看见一个极其瘦弱的脊背弯曲着，头和缝纫机挨得很近。周围几只灯泡烤着我的脸。'妈——''妈——'背直起来了，我的母亲。转过身来了，我的母亲。褐色的口罩上方，一对眼神疲惫的眼睛吃惊地望着我，我的母亲……"
+        }
+      ]
+    },
+    "grade6": {
+      "name": "六年级",
+      "words": [
+        {"word": "魁梧", "pinyin": "kuí wú", "meaning": "身体强壮高大"},
+        {"word": "枯竭", "pinyin": "kū jié", "meaning": "用尽、断绝"},
+        {"word": "滥用", "pinyin": "làn yòng", "meaning": "胡乱地或过度地使用"},
+        {"word": "威胁", "pinyin": "wēi xié", "meaning": "用威力逼迫恐吓，使服从"},
+        {"word": "眷恋", "pinyin": "juàn liàn", "meaning": "深切地留恋"},
+        {"word": "和蔼", "pinyin": "hé ǎi", "meaning": "态度温和，容易接近"},
+        {"word": "恩赐", "pinyin": "ēn cì", "meaning": "赏赐"},
+        {"word": "渺小", "pinyin": "miǎo xiǎo", "meaning": "微小"},
+        {"word": "慷慨", "pinyin": "kāng kǎi", "meaning": "大方，不吝惜"},
+        {"word": "指望", "pinyin": "zhǐ wàng", "meaning": "一心期待，盼望"},
+        {"word": "治理", "pinyin": "zhì lǐ", "meaning": "统治、管理；处理、整修"},
+        {"word": "荡漾", "pinyin": "dàng yàng", "meaning": "水波一起一伏地动"},
+        {"word": "领悟", "pinyin": "lǐng wù", "meaning": "领会、明白"},
+        {"word": "纷至沓来", "pinyin": "fēn zhì tà lái", "meaning": "形容接连不断地到来"},
+        {"word": "奄奄一息", "pinyin": "yǎn yǎn yī xī", "meaning": "形容临近死亡"}
+      ],
+      "texts": [
+        {
+          "title": "《只有一个地球》节选",
+          "content": "据有幸飞上太空的宇航员介绍，他们在天际遨游时遥望地球，映入眼帘的是一个晶莹的球体，上面蓝色和白色的纹痕相互交错，周围裹着一层薄薄的水蓝色'纱衣'。地球，这位人类的母亲，这个生命的摇篮，是那样的美丽壮观，和蔼可亲。但是，同茫茫宇宙相比，地球是渺小的。它是一个半径只有六千三百多千米的星球。在群星璀璨的宇宙中，就像一叶扁舟。它只有这么大，不会再长大。"
+        },
+        {
+          "title": "《中华少年》节选",
+          "content": "从巍峨峻拔的高原走来，我是冰山上的一朵雪莲；从碧波环抱的宝岛走来，我是海风中的一只乳燕；从苍苍茫茫的草原走来，我是蓝天下翱翔的雏鹰；从七沟八梁的黄土坡走来，我是黄河边鲜嫩的山丹丹。啊！神州大地生长的希望，我们是中华的少年！"
+        }
+      ]
+    }
+  }
+};
+</script>
+<script>
+/**
+ * 本地存储管理模块
+ * 使用 localStorage 存储用户数据、学习记录、家长设置等
+ */
+
+const Storage = {
+  // 键名常量
+  KEYS: {
+    SETTINGS: 'study_helper_settings',
+    STATS: 'study_helper_stats',
+    PARENT_PASSWORD: 'study_helper_parent_password',
+    DAILY_RECORD: 'study_helper_daily_record',
+    CURRENT_DATE: 'study_helper_current_date'
+  },
+
+  // 默认设置
+  defaultSettings: {
+    dailyLimit: 60, // 分钟
+    breakInterval: 20, // 分钟
+    showReminder: true,
+    voiceEnabled: true,
+    dailyGoal: 20,
+    startTime: null, // 当日开始时间
+    totalTimeToday: 0, // 当日累计时长(秒)
+    lastBreakTime: 0 // 上次休息提醒时间
+  },
+
+  // 默认统计
+  defaultStats: {
+    totalWordsLearned: 0,
+    totalCorrect: 0,
+    totalWrong: 0,
+    totalStudyTime: 0, // 秒
+    streakDays: 0,
+    lastStudyDate: null,
+    dailyCompleted: 0,
+    history: [] // 最近7天记录 [{date, minutes}]
+  },
+
+  /**
+   * 获取家长设置
+   */
+  getSettings() {
+    const saved = localStorage.getItem(this.KEYS.SETTINGS);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      return { ...this.defaultSettings, ...parsed };
+    }
+    return { ...this.defaultSettings };
+  },
+
+  /**
+   * 保存家长设置
+   */
+  saveSettings(settings) {
+    localStorage.setItem(this.KEYS.SETTINGS, JSON.stringify(settings));
+  },
+
+  /**
+   * 获取学习统计
+   */
+  getStats() {
+    const saved = localStorage.getItem(this.KEYS.STATS);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      return { ...this.defaultStats, ...parsed };
+    }
+    return { ...this.defaultStats };
+  },
+
+  /**
+   * 保存学习统计
+   */
+  saveStats(stats) {
+    localStorage.setItem(this.KEYS.STATS, JSON.stringify(stats));
+  },
+
+  /**
+   * 获取/设置家长密码
+   */
+  getParentPassword() {
+    return localStorage.getItem(this.KEYS.PARENT_PASSWORD);
+  },
+
+  setParentPassword(password) {
+    localStorage.setItem(this.KEYS.PARENT_PASSWORD, password);
+  },
+
+  /**
+   * 清除所有数据
+   */
+  clearAllData() {
+    Object.values(this.KEYS).forEach(key => {
+      localStorage.removeItem(key);
+    });
+  },
+
+  /**
+   * 检查是否是新的一天，重置当日数据
+   */
+  checkNewDay() {
+    const today = this.getTodayStr();
+    const lastDate = localStorage.getItem(this.KEYS.CURRENT_DATE);
+    
+    if (lastDate !== today) {
+      // 新的一天，重置当日数据
+      const settings = this.getSettings();
+      settings.totalTimeToday = 0;
+      settings.startTime = null;
+      settings.lastBreakTime = 0;
+      this.saveSettings(settings);
+      
+      // 更新统计
+      const stats = this.getStats();
+      stats.dailyCompleted = 0;
+      
+      // 更新连续学习天数
+      const yesterday = this.getYesterdayStr();
+      if (stats.lastStudyDate === yesterday) {
+        stats.streakDays = (stats.streakDays || 0) + 1;
+      } else if (stats.lastStudyDate !== today) {
+        stats.streakDays = 1;
+      }
+      stats.lastStudyDate = today;
+      
+      // 清理7天前的历史
+      const cutoffDate = new Date();
+      cutoffDate.setDate(cutoffDate.getDate() - 7);
+      const cutoffStr = this.formatDate(cutoffDate);
+      stats.history = (stats.history || []).filter(h => h.date >= cutoffStr);
+      
+      this.saveStats(stats);
+      localStorage.setItem(this.KEYS.CURRENT_DATE, today);
+    }
+  },
+
+  /**
+   * 记录学习时间
+   */
+  addStudyTime(seconds) {
+    this.checkNewDay();
+    const settings = this.getSettings();
+    settings.totalTimeToday = (settings.totalTimeToday || 0) + seconds;
+    this.saveSettings(settings);
+
+    const stats = this.getStats();
+    stats.totalStudyTime = (stats.totalStudyTime || 0) + seconds;
+    
+    // 更新今日历史
+    const today = this.getTodayStr();
+    const todayMinutes = Math.round((settings.totalTimeToday || 0) / 60);
+    const existingHistory = stats.history.find(h => h.date === today);
+    if (existingHistory) {
+      existingHistory.minutes = todayMinutes;
+    } else {
+      stats.history = stats.history || [];
+      stats.history.push({ date: today, minutes: todayMinutes });
+    }
+    
+    this.saveStats(stats);
+  },
+
+  /**
+   * 记录答题结果
+   */
+  recordAnswer(isCorrect) {
+    const stats = this.getStats();
+    if (isCorrect) {
+      stats.totalCorrect = (stats.totalCorrect || 0) + 1;
+      stats.dailyCompleted = (stats.dailyCompleted || 0) + 1;
+    } else {
+      stats.totalWrong = (stats.totalWrong || 0) + 1;
+    }
+    stats.totalWordsLearned = (stats.totalWordsLearned || 0) + 1;
+    this.saveStats(stats);
+  },
+
+  /**
+   * 获取今日已用时间（秒）
+   */
+  getTodayUsedTime() {
+    this.checkNewDay();
+    const settings = this.getSettings();
+    return settings.totalTimeToday || 0;
+  },
+
+  /**
+   * 获取今日剩余时间（秒）
+   */
+  getRemainingTime() {
+    const settings = this.getSettings();
+    const dailyLimit = settings.dailyLimit * 60; // 转为秒
+    if (dailyLimit === 0) return Infinity; // 不限制
+    
+    const used = this.getTodayUsedTime();
+    return Math.max(0, dailyLimit - used);
+  },
+
+  /**
+   * 是否超过每日限制
+   */
+  isTimeUp() {
+    const settings = this.getSettings();
+    if (settings.dailyLimit === 0) return false;
+    return this.getRemainingTime() <= 0;
+  },
+
+  // 辅助方法
+  getTodayStr() {
+    return this.formatDate(new Date());
+  },
+
+  getYesterdayStr() {
+    const d = new Date();
+    d.setDate(d.getDate() - 1);
+    return this.formatDate(d);
+  },
+
+  formatDate(date) {
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  }
+};
+
+</script>
+  <script>
+/**
+ * 学习小助手 - 主应用逻辑
+ * 英语单词默写、语文生字默写、课文默写、家长控制等功能
+ */
+
+// 应用状态
+const App = {
+  // 数据缓存
+  englishData: null,
+  chineseData: null,
+  
+  // 当前状态
+  state: {
+    currentPage: 'home',
+    subject: null, // 'english' | 'chinese'
+    gradeKey: null,
+    gradeName: null,
+    practiceMode: null,
+    wordList: [],
+    currentIndex: 0,
+    results: [],
+    selectedAnswer: null,
+    timeInterval: null,
+    studyInterval: null,
+    breakIntervalTimer: null,
+    isPaused: false
+  },
+
+  /**
+   * 初始化应用
+   */
+  async init() {
+    // 检查家长密码是否设置
+    const hasPassword = !!Storage.getParentPassword();
+    
+    // 检查是否超过时间限制
+    Storage.checkNewDay();
+    
+    // 加载数据：优先使用内嵌数据（离线版单文件），否则请求本地JSON文件
+    try {
+      if (window.__ENGLISH_DATA__ && window.__CHINESE_DATA__) {
+        this.englishData = window.__ENGLISH_DATA__;
+        this.chineseData = window.__CHINESE_DATA__;
+      } else {
+        const [english, chinese] = await Promise.all([
+          fetch('data/english.json').then(r => r.json()),
+          fetch('data/chinese.json').then(r => r.json())
+        ]);
+        this.englishData = english;
+        this.chineseData = chinese;
+      }
+    } catch (e) {
+      console.error('数据加载失败:', e);
+    }
+
+    // 显示启动画面，然后进入主界面
+    setTimeout(() => {
+      const splash = document.getElementById('splash-screen');
+      splash.classList.add('fade-out');
+      setTimeout(() => {
+        splash.classList.add('hidden');
+        document.getElementById('app').classList.remove('hidden');
+        
+        // 如果没有设置密码，引导设置
+        if (!hasPassword) {
+          setTimeout(() => this.openSetPasswordModal(), 300);
+        }
+        
+        this.updateHomePage();
+        this.startTimeTracking();
+      }, 500);
+    }, 2000);
+
+    // 注册 Service Worker（PWA支持，仅在 http/https 环境下生效）
+    const isWebContext = location.protocol === 'http:' || location.protocol === 'https:';
+    if (isWebContext && 'serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js').catch(console.error);
+      });
+    }
+
+    // 注册可见性变化事件
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        this.pauseTracking();
+      } else {
+        this.resumeTracking();
+      }
+    });
+  },
+
+  /**
+   * 时间追踪
+   */
+  startTimeTracking() {
+    const settings = Storage.getSettings();
+    
+    // 已用完时间检查
+    if (Storage.isTimeUp()) {
+      this.showTimeUpModal();
+      return;
+    }
+
+    // 更新时间显示
+    this.updateTimerDisplay();
+
+    // 每秒更新显示
+    this.state.timeInterval = setInterval(() => {
+      this.updateTimerDisplay();
+      
+      if (Storage.isTimeUp()) {
+        this.showTimeUpModal();
+        this.pauseTracking();
+      }
+    }, 1000);
+
+    // 每30秒记录学习时间
+    this.state.studyInterval = setInterval(() => {
+      Storage.addStudyTime(30);
+      this.checkBreakReminder();
+      this.updateHomePage();
+    }, 30000);
+  },
+
+  pauseTracking() {
+    this.state.isPaused = true;
+  },
+
+  resumeTracking() {
+    if (this.state.isPaused) {
+      this.state.isPaused = false;
+    }
+  },
+
+  updateTimerDisplay() {
+    const display = document.getElementById('timer-display');
+    const remaining = Storage.getRemainingTime();
+    const settings = Storage.getSettings();
+    
+    if (settings.dailyLimit === 0) {
+      display.innerHTML = '<span class="timer-icon">⏱️</span><span>无限制</span>';
+      return;
+    }
+
+    if (remaining === Infinity || remaining < 0) {
+      display.innerHTML = '<span class="timer-icon">⏰</span><span>已用完</span>';
+      return;
+    }
+
+    const mins = Math.floor(remaining / 60);
+    const secs = remaining % 60;
+    const timeStr = `${mins}:${String(secs).padStart(2, '0')}`;
+    
+    // 时间少时变红
+    if (remaining < 300) {
+      display.style.color = '#FFE0E0';
+    }
+    display.innerHTML = `<span class="timer-icon">⏱️</span><span>${timeStr}</span>`;
+  },
+
+  checkBreakReminder() {
+    const settings = Storage.getSettings();
+    const used = Storage.getTodayUsedTime();
+    const intervalSec = settings.breakInterval * 60;
+    
+    // 每到休息间隔提醒
+    const shouldRemind = Math.floor(used / intervalSec) > 
+                         Math.floor((used - 30) / intervalSec);
+    
+    if (shouldRemind && used > 0) {
+      this.showBreakReminder();
+    }
+  },
+
+  showBreakReminder() {
+    const modal = document.getElementById('break-modal');
+    modal.classList.remove('hidden');
+    
+    // 30秒倒计时
+    let seconds = 30;
+    const display = document.getElementById('break-timer-display');
+    const timer = setInterval(() => {
+      seconds--;
+      display.textContent = `00:${String(seconds).padStart(2, '0')}`;
+      if (seconds <= 0) {
+        clearInterval(timer);
+        this.skipBreak();
+      }
+    }, 1000);
+    
+    modal.dataset.timer = timer;
+  },
+
+  skipBreak() {
+    const modal = document.getElementById('break-modal');
+    const timer = modal.dataset.timer;
+    if (timer) clearInterval(timer);
+    modal.classList.add('hidden');
+  },
+
+  showTimeUpModal() {
+    document.getElementById('time-up-modal').classList.remove('hidden');
+  },
+
+  closeTimeUpModal() {
+    document.getElementById('time-up-modal').classList.add('hidden');
+    this.navigateTo('home');
+  },
+
+  /**
+   * 更新首页
+   */
+  updateHomePage() {
+    const stats = Storage.getStats();
+    const settings = Storage.getSettings();
+    const greeting = this.getGreeting();
+    
+    document.getElementById('greeting-text').textContent = greeting;
+    document.getElementById('streak-count').textContent = stats.streakDays || 0;
+    document.getElementById('total-words').textContent = stats.totalWordsLearned || 0;
+    document.getElementById('total-correct').textContent = stats.totalCorrect || 0;
+    document.getElementById('total-time').textContent = 
+      Math.round((stats.totalStudyTime || 0) / 60) + '分钟';
+    
+    // 更新目标进度
+    const completed = stats.dailyCompleted || 0;
+    const goal = settings.dailyGoal || 20;
+    const percent = Math.min(100, (completed / goal) * 100);
+    document.getElementById('goal-progress').textContent = `${completed} / ${goal}`;
+    document.getElementById('goal-fill').style.width = percent + '%';
+  },
+
+  getGreeting() {
+    const hour = new Date().getHours();
+    if (hour < 6) return '夜深了，早点休息哦！';
+    if (hour < 12) return '早上好，小朋友！';
+    if (hour < 14) return '中午好，吃饱饱才有力气学习！';
+    if (hour < 18) return '下午好，继续加油！';
+    if (hour < 22) return '晚上好，今天学习了吗？';
+    return '时间不早啦，准备休息吧~';
+  },
+
+  /**
+   * 页面导航
+   */
+  navigateTo(page) {
+    // 隐藏所有页面
+    document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+    
+    // 显示目标页面
+    const pageEl = document.getElementById('page-' + page);
+    if (pageEl) {
+      pageEl.classList.remove('hidden');
+    }
+
+    // 更新导航栏
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    event?.currentTarget?.classList?.add('active') || 
+      document.querySelector(`.nav-item[onclick*="${page}"]`)?.classList.add('active');
+
+    // 返回按钮
+    const backBtn = document.getElementById('back-btn');
+    const title = document.getElementById('page-title');
+    
+    if (page === 'home') {
+      backBtn.style.display = 'none';
+      title.textContent = '学习小助手';
+      this.updateHomePage();
+    } else if (page === 'subject') {
+      backBtn.style.display = 'flex';
+      title.textContent = this.state.subject === 'english' ? '英语学习' : 
+                         (this.state.subject === 'chinese' ? '语文学习' : '选择学习');
+      this.showGradeSelect();
+    } else if (page === 'parent') {
+      backBtn.style.display = 'flex';
+      title.textContent = '家长控制';
+      this.loadParentSettings();
+    } else if (page === 'practice') {
+      title.textContent = '练习中';
+    } else if (page === 'result') {
+      title.textContent = '练习结果';
+    }
+
+    this.state.currentPage = page;
+    window.scrollTo(0, 0);
+  },
+
+  goBack() {
+    if (this.state.currentPage === 'subject' && this.state.practiceMode) {
+      // 从模式选择返回年级选择
+      document.getElementById('mode-select').classList.add('hidden');
+      this.state.practiceMode = null;
+    } else if (this.state.currentPage === 'subject') {
+      this.navigateTo('home');
+    } else {
+      this.navigateTo('home');
+    }
+  },
+
+  goHome() {
+    this.navigateTo('home');
+  },
+
+  /**
+   * 选择科目
+   */
+  selectSubject(subject) {
+    // 检查时间
+    if (Storage.isTimeUp()) {
+      this.showTimeUpModal();
+      return;
+    }
+    
+    this.state.subject = subject;
+    this.navigateTo('subject');
+  },
+
+  /**
+   * 显示年级选择
+   */
+  showGradeSelect() {
+    const data = this.state.subject === 'english' ? this.englishData : this.chineseData;
+    const grades = data?.grades || {};
+    const gradeGrid = document.getElementById('grade-grid');
+    
+    gradeGrid.innerHTML = '';
+    
+    Object.entries(grades).forEach(([key, grade]) => {
+      const card = document.createElement('div');
+      card.className = 'grade-card';
+      card.innerHTML = `
+        <div class="grade-number">${grade.name}</div>
+        <div class="grade-label">${grade.words.length}个单词${grade.texts ? ' · ' + grade.texts.length + '篇课文' : ''}</div>
+      `;
+      card.onclick = () => this.selectGrade(key, grade.name);
+      gradeGrid.appendChild(card);
+    });
+
+    document.getElementById('mode-select').classList.add('hidden');
+  },
+
+  selectGrade(key, name) {
+    this.state.gradeKey = key;
+    this.state.gradeName = name;
+    
+    // 显示模式选择
+    const data = this.state.subject === 'english' ? this.englishData : this.chineseData;
+    const hasTexts = data?.grades?.[key]?.texts?.length > 0;
+    document.getElementById('text-dictation-card').style.display = hasTexts ? '' : 'none';
+    
+    document.getElementById('mode-select').classList.remove('hidden');
+    
+    // 高亮选中的年级
+    document.querySelectorAll('.grade-card').forEach((card, idx) => {
+      card.classList.toggle('selected', 
+        Object.keys(data?.grades || {})[idx] === key);
+    });
+  },
+
+  /**
+   * 开始练习
+   */
+  startPractice(mode) {
+    this.state.practiceMode = mode;
+    const data = this.state.subject === 'english' ? this.englishData : this.chineseData;
+    const grade = data?.grades?.[this.state.gradeKey];
+    
+    if (!grade) return;
+
+    // 根据模式准备题目
+    if (mode === 'text-dictation' && grade.texts) {
+      // 课文默写模式
+      this.state.wordList = this.prepareTextQuestions(grade.texts);
+    } else {
+      // 单词模式
+      this.state.wordList = [...grade.words];
+      // 随机打乱
+      this.shuffleArray(this.state.wordList);
+      // 限制10个
+      this.state.wordList = this.state.wordList.slice(0, 10);
+    }
+    
+    this.state.currentIndex = 0;
+    this.state.results = [];
+    this.state.selectedAnswer = null;
+    
+    // 跳转到练习页
+    document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+    document.getElementById('page-practice').classList.remove('hidden');
+    document.getElementById('page-title').textContent = this.state.gradeName + ' - ' + this.getModeName(mode);
+    
+    this.renderQuestion();
+  },
+
+  getModeName(mode) {
+    const names = {
+      'word-dictation': '单词默写',
+      'word-practice': '单词练习',
+      'text-dictation': '课文默写'
+    };
+    return names[mode] || mode;
+  },
+
+  prepareTextQuestions(texts) {
+    // 随机选择一篇课文，挖空几个词
+    const text = texts[Math.floor(Math.random() * texts.length)];
+    const words = text.content.split(/[，。！？、\s]/).filter(w => w.length >= 2);
+    
+    // 选5-8个词挖空
+    const blankCount = Math.min(6, words.length);
+    const shuffled = this.shuffleArray([...words]);
+    const blanks = shuffled.slice(0, blankCount);
+    
+    return [{
+      type: 'text',
+      title: text.title,
+      content: text.content,
+      blanks: blanks,
+      totalBlanks: blankCount
+    }];
+  },
+
+  shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  },
+
+  /**
+   * 渲染当前题目
+   */
+  renderQuestion() {
+    const list = this.state.wordList;
+    const idx = this.state.currentIndex;
+    
+    document.getElementById('current-index').textContent = idx + 1;
+    document.getElementById('total-count').textContent = list.length;
+    document.getElementById('correct-count').textContent = 
+      this.state.results.filter(r => r.correct).length;
+    document.getElementById('wrong-count').textContent = 
+      this.state.results.filter(r => !r.correct).length;
+
+    const card = document.getElementById('practice-card');
+    const inputArea = document.getElementById('practice-input-area');
+    const mode = this.state.practiceMode;
+    const isEnglish = this.state.subject === 'english';
+
+    this.state.selectedAnswer = null;
+
+    if (mode === 'text-dictation') {
+      this.renderTextDictation(card, inputArea);
+      return;
+    }
+
+    const word = list[idx];
+    
+    if (mode === 'word-dictation') {
+      // 默写模式：显示中文/释义，输入英文/中文
+      if (isEnglish) {
+        // 英语：显示中文，写英文
+        card.innerHTML = `
+          <div class="practice-hint">请根据中文意思写出英文单词</div>
+          <div class="practice-question">${word.meaning}</div>
+          <div class="practice-phonetic">${word.phonetic || ''}</div>
+          <button class="speaker-btn" onclick="App.speak('${word.word}')">🔊 听发音</button>
+        `;
+        inputArea.innerHTML = `<input type="text" class="answer-input" id="answer-input" placeholder="输入英文单词" autocomplete="off" autocapitalize="off">`;
+      } else {
+        // 语文：显示拼音，写汉字
+        card.innerHTML = `
+          <div class="practice-hint">请根据拼音写出汉字</div>
+          <div class="practice-question pinyin">${word.pinyin}</div>
+          <div class="practice-phonetic">${word.meaning}</div>
+        `;
+        inputArea.innerHTML = `<input type="text" class="answer-input" id="answer-input" placeholder="输入汉字" autocomplete="off">`;
+      }
+    } else if (mode === 'word-practice') {
+      // 练习模式：选择题
+      if (isEnglish) {
+        card.innerHTML = `
+          <div class="practice-hint">选择正确的中文意思</div>
+          <div class="practice-question">${word.word}</div>
+          <div class="practice-phonetic">${word.phonetic || ''}</div>
+          <button class="speaker-btn" onclick="App.speak('${word.word}')">🔊 听发音</button>
+        `;
+        
+        // 生成选项（正确答案 + 3个错误答案）
+        const wrongOptions = this.getWrongOptions(idx, 'meaning', 3);
+        const options = this.shuffleArray([word.meaning, ...wrongOptions]);
+        
+        inputArea.innerHTML = `
+          <div class="choice-grid">
+            ${options.map((opt, i) => `
+              <button class="choice-btn" data-value="${opt}" onclick="App.selectChoice(this)">${String.fromCharCode(65 + i)}. ${opt}</button>
+            `).join('')}
+          </div>
+        `;
+      } else {
+        card.innerHTML = `
+          <div class="practice-hint">选择正确的拼音</div>
+          <div class="practice-question">${word.word}</div>
+        `;
+        
+        const wrongOptions = this.getWrongOptions(idx, 'pinyin', 3);
+        const options = this.shuffleArray([word.pinyin, ...wrongOptions]);
+        
+        inputArea.innerHTML = `
+          <div class="choice-grid">
+            ${options.map((opt, i) => `
+              <button class="choice-btn" data-value="${opt}" onclick="App.selectChoice(this)">${String.fromCharCode(65 + i)}. ${opt}</button>
+            `).join('')}
+          </div>
+        `;
+      }
+    }
+
+    // 自动聚焦输入框
+    setTimeout(() => {
+      const input = document.getElementById('answer-input');
+      if (input) input.focus();
+    }, 100);
+  },
+
+  renderTextDictation(card, inputArea) {
+    const textItem = this.state.wordList[0];
+    const content = textItem.content;
+    const blanks = textItem.blanks;
+    
+    // 创建挖空版本
+    let blankIndex = 0;
+    let renderedContent = content;
+    const blankMap = {};
+    
+    blanks.forEach((blank, idx) => {
+      if (!blankMap[blank]) {
+        // 替换第一次出现的该词
+        renderedContent = renderedContent.replace(
+          new RegExp(blank.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')),
+          `{{BLANK_${idx}}}`
+        );
+        blankMap[blank] = idx;
+      }
+    });
+
+    // 分割内容为段落
+    const parts = renderedContent.split(/(\{\{BLANK_\d+\}\})/);
+    
+    card.innerHTML = `
+      <div class="practice-hint">根据记忆补充课文中缺失的词语</div>
+      <div style="font-size:14px;color:#999;margin-bottom:12px;">${textItem.title}</div>
+      <div class="text-content" id="text-content">
+        ${parts.map(part => {
+          const match = part.match(/\{\{BLANK_(\d+)\}\}/);
+          if (match) {
+            const idx = match[1];
+            return `<span class="text-blank" data-blank="${idx}" contenteditable="true" 
+              oninput="App.onBlankInput(this)" 
+              onkeydown="App.handleBlankKey(event, this)">&nbsp;</span>`;
+          }
+          return part;
+        }).join('')}
+      </div>
+    `;
+    
+    inputArea.innerHTML = `<div style="font-size:13px;color:#999;padding:8px;">💡 点击空格处，输入课文中的词语</div>`;
+    
+    // 存储正确答案映射
+    this.state.textBlanks = blanks;
+  },
+
+  onBlankInput(el) {
+    el.classList.remove('filled', 'wrong');
+  },
+
+  handleBlankKey(event, el) {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      // 跳到下一个空格
+      const blanks = document.querySelectorAll('.text-blank');
+      const currentIdx = Array.from(blanks).indexOf(el);
+      if (currentIdx < blanks.length - 1) {
+        blanks[currentIdx + 1].focus();
+      }
+    }
+  },
+
+  getWrongOptions(currentIdx, field, count) {
+    const data = this.state.subject === 'english' ? this.englishData : this.chineseData;
+    const grade = data.grades[this.state.gradeKey];
+    const currentWord = grade.words[currentIdx];
+    
+    // 从同年级其他词中选错误选项
+    const others = grade.words.filter((_, i) => i !== currentIdx);
+    const shuffled = this.shuffleArray([...others]);
+    const wrongs = shuffled.slice(0, count).map(w => w[field]);
+    
+    // 确保不重复
+    const seen = new Set([currentWord[field]]);
+    return wrongs.filter(w => {
+      if (seen.has(w)) return false;
+      seen.add(w);
+      return true;
+    }).slice(0, count);
+  },
+
+  selectChoice(btn) {
+    document.querySelectorAll('.choice-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    this.state.selectedAnswer = btn.dataset.value;
+  },
+
+  /**
+   * 语音朗读
+   */
+  speak(text) {
+    const settings = Storage.getSettings();
+    if (!settings.voiceEnabled) return;
+    
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = this.state.subject === 'english' ? 'en-US' : 'zh-CN';
+      utterance.rate = 0.8;
+      window.speechSynthesis.speak(utterance);
+    }
+  },
+
+  /**
+   * 提交答案
+   */
+  submitAnswer() {
+    const mode = this.state.practiceMode;
+    
+    if (mode === 'text-dictation') {
+      this.submitTextDictation();
+      return;
+    }
+
+    const list = this.state.wordList;
+    const idx = this.state.currentIndex;
+    const word = list[idx];
+    const isEnglish = this.state.subject === 'english';
+    
+    let userAnswer, correctAnswer;
+    
+    if (mode === 'word-dictation') {
+      const input = document.getElementById('answer-input');
+      if (!input) return;
+      userAnswer = input.value.trim().toLowerCase();
+      correctAnswer = isEnglish ? word.word.toLowerCase() : word.word;
+      
+      if (!userAnswer) {
+        this.showToast('请输入答案哦~');
+        input.focus();
+        return;
+      }
+    } else if (mode === 'word-practice') {
+      if (!this.state.selectedAnswer) {
+        this.showToast('请选择一个选项~');
+        return;
+      }
+      userAnswer = this.state.selectedAnswer;
+      correctAnswer = isEnglish ? word.meaning : word.pinyin;
+    }
+
+    const isCorrect = userAnswer === correctAnswer;
+    
+    // 记录结果
+    this.state.results.push({
+      word: word.word,
+      correctAnswer: isEnglish ? word.word : word.word,
+      userAnswer: userAnswer,
+      isCorrect: isCorrect,
+      mode: mode
+    });
+    
+    Storage.recordAnswer(isCorrect);
+
+    // 显示反馈
+    this.showFeedback(isCorrect, correctAnswer, userAnswer);
+  },
+
+  submitTextDictation() {
+    const blanks = document.querySelectorAll('.text-blank');
+    const correctAnswers = this.state.textBlanks;
+    
+    let correctCount = 0;
+    const results = [];
+    
+    blanks.forEach((blankEl, i) => {
+      const userAnswer = blankEl.textContent.trim();
+      const correctAnswer = correctAnswers[i];
+      const isCorrect = userAnswer === correctAnswer;
+      
+      results.push({
+        blankIndex: i,
+        userAnswer: userAnswer,
+        correctAnswer: correctAnswer,
+        isCorrect: isCorrect
+      });
+      
+      if (isCorrect) {
+        blankEl.classList.add('filled');
+        correctCount++;
+      } else {
+        blankEl.classList.add('wrong');
+        blankEl.textContent = correctAnswer;
+        blankEl.style.textDecoration = 'underline';
+      }
+    });
+
+    // 记录统计
+    results.forEach(r => Storage.recordAnswer(r.isCorrect));
+
+    setTimeout(() => {
+      this.state.results = [{
+        word: '课文填空',
+        correctAnswer: `${correctCount}/${correctAnswers.length}`,
+        userAnswer: `${correctAnswers.length - correctCount}处错误`,
+        isCorrect: correctCount === correctAnswers.length,
+        detail: results,
+        mode: 'text-dictation',
+        total: correctAnswers.length,
+        correct: correctCount
+      }];
+      this.showResultPage();
+    }, 1500);
+  },
+
+  showFeedback(isCorrect, correctAnswer, userAnswer) {
+    const card = document.getElementById('practice-card');
+    
+    // 高亮正确/错误
+    if (this.state.practiceMode === 'word-practice') {
+      document.querySelectorAll('.choice-btn').forEach(btn => {
+        if (btn.dataset.value === correctAnswer) {
+          btn.classList.add('correct');
+        } else if (btn.dataset.value === userAnswer && userAnswer !== correctAnswer) {
+          btn.classList.add('wrong');
+        }
+      });
+    } else {
+      const input = document.getElementById('answer-input');
+      if (input) {
+        input.classList.add(isCorrect ? 'correct' : 'wrong');
+        input.disabled = true;
+      }
+    }
+
+    // 显示反馈文字
+    const feedbackDiv = document.createElement('div');
+    if (isCorrect) {
+      feedbackDiv.className = 'feedback-correct';
+      feedbackDiv.textContent = '🎉 回答正确！';
+    } else {
+      feedbackDiv.className = 'feedback-wrong';
+      feedbackDiv.innerHTML = `❌ 正确答案是：<strong>${correctAnswer}</strong>`;
+    }
+    card.appendChild(feedbackDiv);
+
+    // 延迟后进入下一题或显示结果
+    setTimeout(() => {
+      this.state.currentIndex++;
+      if (this.state.currentIndex >= this.state.wordList.length) {
+        this.showResultPage();
+      } else {
+        this.renderQuestion();
+      }
+    }, 1500);
+  },
+
+  /**
+   * 显示结果页
+   */
+  showResultPage() {
+    document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+    document.getElementById('page-result').classList.remove('hidden');
+    
+    const correct = this.state.results.filter(r => r.isCorrect).length;
+    const total = this.state.results.length;
+    const wrong = total - correct;
+    const rate = total > 0 ? Math.round((correct / total) * 100) : 0;
+
+    // 设置emoji和标题
+    let emoji, title;
+    if (rate === 100) {
+      emoji = '🏆'; title = '太棒了！全部正确！';
+    } else if (rate >= 80) {
+      emoji = '🎉'; title = '非常不错！继续加油！';
+    } else if (rate >= 60) {
+      emoji = '💪'; title = '还可以，再接再厉！';
+    } else {
+      emoji = '📚'; title = '别灰心，多练习几次！';
+    }
+
+    document.getElementById('result-emoji').textContent = emoji;
+    document.getElementById('result-title').textContent = title;
+    document.getElementById('result-correct').textContent = correct;
+    document.getElementById('result-wrong').textContent = wrong;
+    document.getElementById('result-rate').textContent = rate + '%';
+
+    // 生成详细列表
+    const list = document.getElementById('result-list');
+    list.innerHTML = '';
+    
+    this.state.results.forEach(r => {
+      const item = document.createElement('div');
+      item.className = 'result-item';
+      
+      if (r.mode === 'text-dictation') {
+        // 课文默写特殊展示
+        const detail = r.detail.map(d => 
+          `<div style="margin:4px 0;">${d.isCorrect ? '✓' : '✗'} ${d.correctAnswer} ${d.isCorrect ? '' : `(你填的: ${d.userAnswer || '空'})`}</div>`
+        ).join('');
+        item.innerHTML = `
+          <div style="flex:1;">
+            <div style="font-weight:500;">${r.word}</div>
+            <div style="font-size:12px;color:#999;margin-top:4px;">${detail}</div>
+          </div>
+          <div class="result-status">${r.isCorrect ? '🎉' : '📖'}</div>
+        `;
+      } else {
+        item.innerHTML = `
+          <div class="question">${r.word}</div>
+          <div class="answers">
+            ${!r.isCorrect ? `<div class="user-answer">你的: ${r.userAnswer}</div>` : ''}
+            <div class="correct-answer">${r.isCorrect ? '✓ 正确' : '✗ 错了'}</div>
+          </div>
+          <div class="status">${r.isCorrect ? '🎉' : '💪'}</div>
+        `;
+      }
+      
+      list.appendChild(item);
+    });
+  },
+
+  restartPractice() {
+    this.startPractice(this.state.practiceMode);
+  },
+
+  /**
+   * 家长面板
+   */
+  openParentPanel() {
+    // 验证家长密码
+    const password = Storage.getParentPassword();
+    
+    if (!password) {
+      // 没有设置密码，直接进入设置面板
+      this.navigateTo('parent');
+      return;
+    }
+    
+    // 显示密码弹窗
+    document.getElementById('parent-password').value = '';
+    document.getElementById('parent-modal').classList.remove('hidden');
+  },
+
+  closeParentModal() {
+    document.getElementById('parent-modal').classList.add('hidden');
+  },
+
+  verifyParent() {
+    const input = document.getElementById('parent-password').value;
+    const stored = Storage.getParentPassword();
+    const hint = document.getElementById('password-hint');
+    
+    if (!stored) {
+      // 默认密码123456
+      if (input === '123456') {
+        this.closeParentModal();
+        this.navigateTo('parent');
+      } else {
+        hint.textContent = '密码错误，默认密码是 123456';
+      }
+    } else if (input === stored) {
+      this.closeParentModal();
+      this.navigateTo('parent');
+    } else {
+      hint.textContent = '密码错误，请重试';
+    }
+  },
+
+  openSetPasswordModal() {
+    document.getElementById('new-password').value = '';
+    document.getElementById('confirm-password').value = '';
+    document.getElementById('set-password-hint').textContent = '';
+    document.getElementById('set-password-modal').classList.remove('hidden');
+  },
+
+  closeSetPasswordModal() {
+    document.getElementById('set-password-modal').classList.add('hidden');
+  },
+
+  setParentPassword() {
+    const pwd1 = document.getElementById('new-password').value;
+    const pwd2 = document.getElementById('confirm-password').value;
+    const hint = document.getElementById('set-password-hint');
+    
+    if (!pwd1 || pwd1.length < 6) {
+      hint.textContent = '密码至少6位';
+      return;
+    }
+    if (!/^\d+$/.test(pwd1)) {
+      hint.textContent = '密码只能包含数字';
+      return;
+    }
+    if (pwd1 !== pwd2) {
+      hint.textContent = '两次密码不一致';
+      return;
+    }
+    
+    Storage.setParentPassword(pwd1);
+    this.closeSetPasswordModal();
+    this.showToast('✓ 密码设置成功');
+  },
+
+  loadParentSettings() {
+    const settings = Storage.getSettings();
+    const stats = Storage.getStats();
+    
+    document.getElementById('daily-limit').value = settings.dailyLimit;
+    document.getElementById('break-interval').value = settings.breakInterval;
+    document.getElementById('show-reminder').checked = settings.showReminder;
+    document.getElementById('voice-enabled').checked = settings.voiceEnabled;
+    
+    // 渲染周学习图表
+    this.renderWeeklyChart(stats.history);
+  },
+
+  renderWeeklyChart(history) {
+    const chart = document.getElementById('weekly-chart');
+    chart.innerHTML = '';
+    
+    // 获取最近7天
+    const days = [];
+    const today = new Date();
+    
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(today);
+      d.setDate(d.getDate() - i);
+      const dateStr = Storage.formatDate(d);
+      const dayName = ['日','一','二','三','四','五','六'][d.getDay()];
+      
+      const record = history?.find(h => h.date === dateStr);
+      days.push({
+        label: dayName,
+        minutes: record?.minutes || 0
+      });
+    }
+    
+    const maxMin = Math.max(...days.map(d => d.minutes), 30);
+    
+    days.forEach(day => {
+      const height = maxMin > 0 ? (day.minutes / maxMin) * 100 : 0;
+      const item = document.createElement('div');
+      item.className = 'bar-item';
+      item.innerHTML = `
+        <div class="bar-label" style="font-size:10px;color:#666;">${day.minutes}分</div>
+        <div class="bar" style="height:${height}%"></div>
+        <div class="bar-label">${day.label}</div>
+      `;
+      chart.appendChild(item);
+    });
+  },
+
+  saveParentSettings() {
+    const settings = Storage.getSettings();
+    
+    settings.dailyLimit = parseInt(document.getElementById('daily-limit').value);
+    settings.breakInterval = parseInt(document.getElementById('break-interval').value);
+    settings.showReminder = document.getElementById('show-reminder').checked;
+    settings.voiceEnabled = document.getElementById('voice-enabled').checked;
+    
+    Storage.saveSettings(settings);
+    
+    // 检查时间限制
+    if (Storage.isTimeUp()) {
+      setTimeout(() => this.showTimeUpModal(), 500);
+    }
+    
+    this.showToast('✓ 设置已保存');
+    this.updateTimerDisplay();
+  },
+
+  clearData() {
+    if (!confirm('确定要清除所有学习数据吗？此操作不可恢复。')) return;
+    
+    Storage.clearAllData();
+    this.showToast('✓ 数据已清除');
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
+  },
+
+  /**
+   * Toast提示
+   */
+  showToast(message, duration = 2000) {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.classList.remove('hidden');
+    
+    clearTimeout(this._toastTimer);
+    this._toastTimer = setTimeout(() => {
+      toast.classList.add('hidden');
+    }, duration);
+  }
+};
+
+// 全局函数（内联事件调用）
+function goBack() { App.goBack(); }
+function goHome() { App.goHome(); }
+function navigateTo(page) { 
+  // 手动触发导航
+  document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+  const pageEl = document.getElementById('page-' + page);
+  if (pageEl) pageEl.classList.remove('hidden');
+  
+  const navItems = document.querySelectorAll('.nav-item');
+  navItems.forEach(n => {
+    n.classList.toggle('active', n.getAttribute('onclick').includes(`'${page}'`));
+  });
+  
+  App.state.currentPage = page;
+  const titles = { home: '学习小助手', subject: App.state.subject === 'english' ? '英语学习' : '语文学习', parent: '家长控制' };
+  document.getElementById('page-title').textContent = titles[page] || '';
+  document.getElementById('back-btn').style.display = page === 'home' ? 'none' : 'flex';
+  
+  if (page === 'home') App.updateHomePage();
+  if (page === 'subject') App.showGradeSelect();
+  if (page === 'parent') App.loadParentSettings();
+  window.scrollTo(0, 0);
+}
+function selectSubject(subject) { App.selectSubject(subject); }
+function openParentPanel() { App.openParentPanel(); }
+function closeParentModal() { App.closeParentModal(); }
+function verifyParent() { App.verifyParent(); }
+function openSetPasswordModal() { App.openSetPasswordModal(); }
+function closeSetPasswordModal() { App.closeSetPasswordModal(); }
+function setParentPassword() { App.setParentPassword(); }
+function saveParentSettings() { App.saveParentSettings(); }
+function clearData() { App.clearData(); }
+function showAnswer() { 
+  // 简单提示
+  App.showToast('提交后会显示正确答案哦~');
+}
+function submitAnswer() { App.submitAnswer(); }
+function skipBreak() { App.skipBreak(); }
+function closeTimeUpModal() { App.closeTimeUpModal(); }
+
+// 启动应用
+window.addEventListener('DOMContentLoaded', () => App.init());
+
+</script>
+</body>
+</html>
