@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#4A90D9">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="学习小助手">
+  <title>学习小助手 - 孩子的学习伙伴</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- 启动画面 -->
+  <div id="splash-screen" class="splash-screen">
+    <div class="splash-content">
+      <div class="app-logo">📚</div>
+      <h1>学习小助手</h1>
+      <p>孩子的专属学习伙伴</p>
+      <div class="loading-bar">
+        <div class="loading-progress"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 家长密码验证弹窗 -->
+  <div id="parent-modal" class="modal hidden">
+    <div class="modal-content">
+      <h2>🔐 家长验证</h2>
+      <p>请输入家长密码</p>
+      <input type="password" id="parent-password" placeholder="默认密码: 123456">
+      <div class="modal-buttons">
+        <button class="btn btn-secondary" onclick="closeParentModal()">取消</button>
+        <button class="btn btn-primary" onclick="verifyParent()">确认</button>
+      </div>
+      <p class="hint" id="password-hint">首次使用请设置家长密码</p>
+    </div>
+  </div>
+
+  <!-- 设置家长密码弹窗 -->
+  <div id="set-password-modal" class="modal hidden">
+    <div class="modal-content">
+      <h2>🔐 设置家长密码</h2>
+      <p>请设置6-12位数字密码</p>
+      <input type="password" id="new-password" placeholder="输入新密码" maxlength="12">
+      <input type="password" id="confirm-password" placeholder="确认新密码" maxlength="12">
+      <div class="modal-buttons">
+        <button class="btn btn-secondary" onclick="closeSetPasswordModal()">取消</button>
+        <button class="btn btn-primary" onclick="setParentPassword()">确认设置</button>
+      </div>
+      <p class="hint" id="set-password-hint"></p>
+    </div>
+  </div>
+
+  <!-- 主应用 -->
+  <div id="app" class="app hidden">
+    <!-- 顶部状态栏 -->
+    <header class="app-header">
+      <button class="icon-btn" id="back-btn" onclick="goBack()" style="display:none">
+        <span class="icon">←</span>
+      </button>
+      <h1 id="page-title">学习小助手</h1>
+      <div class="header-right">
+        <div class="timer-display" id="timer-display">
+          <span class="timer-icon">⏱️</span>
+          <span id="time-remaining">--:--</span>
+        </div>
+        <button class="icon-btn" onclick="openParentPanel()">
+          <span class="icon">⚙️</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="app-main" id="app-main">
+      <!-- 首页 -->
+      <section class="page" id="page-home">
+        <div class="welcome-section">
+          <div class="welcome-greeting">
+            <span id="greeting-text">你好，小朋友！</span>
+          </div>
+          <div class="streak-info">
+            <span class="streak-icon">🔥</span>
+            <span>连续学习 <strong id="streak-count">0</strong> 天</span>
+          </div>
+        </div>
+
+        <div class="stats-card">
+          <div class="stat-item">
+            <div class="stat-number" id="total-words">0</div>
+            <div class="stat-label">已学单词</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" id="total-correct">0</div>
+            <div class="stat-label">答对次数</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" id="total-time">0分钟</div>
+            <div class="stat-label">累计学习</div>
+          </div>
+        </div>
+
+        <div class="section-title">选择学习内容</div>
+
+        <div class="subject-grid">
+          <div class="subject-card english" onclick="selectSubject('english')">
+            <div class="subject-icon">📖</div>
+            <div class="subject-name">英语学习</div>
+            <div class="subject-desc">单词默写 · 听音练习</div>
+          </div>
+          <div class="subject-card chinese" onclick="selectSubject('chinese')">
+            <div class="subject-icon">✍️</div>
+            <div class="subject-name">语文学习</div>
+            <div class="subject-desc">生字默写 · 课文背诵</div>
+          </div>
+        </div>
+
+        <div class="daily-goal">
+          <div class="goal-header">
+            <span>今日学习目标</span>
+            <span id="goal-progress">0 / 20</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="goal-fill" style="width: 0%"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 科目选择页 -->
+      <section class="page hidden" id="page-subject">
+        <div class="grade-select">
+          <div class="section-title" id="grade-title">选择年级</div>
+          <div class="grade-grid" id="grade-grid"></div>
+        </div>
+
+        <div class="mode-select hidden" id="mode-select">
+          <div class="section-title">选择练习模式</div>
+          <div class="mode-grid">
+            <div class="mode-card" onclick="startPractice('word-dictation')">
+              <div class="mode-icon">📝</div>
+              <div class="mode-name">单词默写</div>
+              <div class="mode-desc">看中文写单词</div>
+            </div>
+            <div class="mode-card" onclick="startPractice('word-practice')">
+              <div class="mode-icon">🎯</div>
+              <div class="mode-name">单词练习</div>
+              <div class="mode-desc">选择正确释义</div>
+            </div>
+            <div class="mode-card hidden" id="text-dictation-card" onclick="startPractice('text-dictation')">
+              <div class="mode-icon">📜</div>
+              <div class="mode-name">课文默写</div>
+              <div class="mode-desc">段落填空练习</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 练习页 -->
+      <section class="page hidden" id="page-practice">
+        <div class="practice-header">
+          <div class="practice-progress">
+            <span id="current-index">1</span> / <span id="total-count">10</span>
+          </div>
+          <div class="practice-score">
+            ✓ <span id="correct-count">0</span>
+            ✗ <span id="wrong-count">0</span>
+          </div>
+        </div>
+
+        <div class="practice-card" id="practice-card">
+          <!-- 动态内容 -->
+        </div>
+
+        <div class="practice-input-area" id="practice-input-area">
+          <!-- 动态输入区域 -->
+        </div>
+
+        <div class="practice-actions">
+          <button class="btn btn-secondary" onclick="showAnswer()">看答案</button>
+          <button class="btn btn-primary btn-large" onclick="submitAnswer()">提交答案</button>
+        </div>
+      </section>
+
+      <!-- 结果页 -->
+      <section class="page hidden" id="page-result">
+        <div class="result-container">
+          <div class="result-emoji" id="result-emoji">🎉</div>
+          <h2 class="result-title" id="result-title">练习完成！</h2>
+          <div class="result-stats">
+            <div class="result-stat">
+              <div class="result-number" id="result-correct">0</div>
+              <div class="result-label">答对</div>
+            </div>
+            <div class="result-stat">
+              <div class="result-number" id="result-wrong">0</div>
+              <div class="result-label">答错</div>
+            </div>
+            <div class="result-stat highlight">
+              <div class="result-number" id="result-rate">0%</div>
+              <div class="result-label">正确率</div>
+            </div>
+          </div>
+
+          <div class="result-list" id="result-list"></div>
+
+          <div class="result-actions">
+            <button class="btn btn-secondary" onclick="goHome()">返回首页</button>
+            <button class="btn btn-primary" onclick="restartPractice()">再来一次</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 家长面板 -->
+      <section class="page hidden" id="page-parent">
+        <div class="parent-section">
+          <h2>⏰ 使用时间控制</h2>
+          <div class="setting-card">
+            <div class="setting-row">
+              <span>每日允许使用时长</span>
+              <select id="daily-limit">
+                <option value="15">15分钟</option>
+                <option value="30">30分钟</option>
+                <option value="45">45分钟</option>
+                <option value="60" selected>60分钟</option>
+                <option value="90">90分钟</option>
+                <option value="120">120分钟</option>
+                <option value="0">不限制</option>
+              </select>
+            </div>
+            <div class="setting-row">
+              <span>休息提醒间隔</span>
+              <select id="break-interval">
+                <option value="15">每15分钟</option>
+                <option value="20" selected>每20分钟</option>
+                <option value="30">每30分钟</option>
+                <option value="45">每45分钟</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="parent-section">
+          <h2>📊 学习统计</h2>
+          <div class="stats-chart">
+            <div class="chart-title">最近7天学习时长</div>
+            <div class="bar-chart" id="weekly-chart"></div>
+          </div>
+        </div>
+
+        <div class="parent-section">
+          <h2>⚙️ 其他设置</h2>
+          <div class="setting-card">
+            <div class="setting-row toggle-row">
+              <span>显示学习提醒</span>
+              <label class="toggle">
+                <input type="checkbox" id="show-reminder" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div class="setting-row toggle-row">
+              <span>语音朗读功能</span>
+              <label class="toggle">
+                <input type="checkbox" id="voice-enabled" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div class="setting-row">
+              <span>修改家长密码</span>
+              <button class="btn btn-small" onclick="openSetPasswordModal()">修改</button>
+            </div>
+            <div class="setting-row">
+              <span>清除学习数据</span>
+              <button class="btn btn-small btn-danger" onclick="clearData()">清除</button>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-full" onclick="saveParentSettings()">保存设置</button>
+      </section>
+    </main>
+
+    <!-- 休息提醒弹窗 -->
+    <div id="break-modal" class="modal hidden">
+      <div class="modal-content break-modal">
+        <div class="break-emoji">☕</div>
+        <h2>该休息啦！</h2>
+        <p>学习了这么久，让眼睛休息一下吧~</p>
+        <div class="break-timer" id="break-timer-display">00:30</div>
+        <button class="btn btn-primary" onclick="skipBreak()">我知道了</button>
+      </div>
+    </div>
+
+    <!-- 时间用尽弹窗 -->
+    <div id="time-up-modal" class="modal hidden">
+      <div class="modal-content time-up-modal">
+        <div class="time-up-emoji">⏰</div>
+        <h2>今日学习时间已用完</h2>
+        <p id="time-up-text">明天再来继续学习吧！</p>
+        <button class="btn btn-primary" onclick="closeTimeUpModal()">好的</button>
+      </div>
+    </div>
+
+    <!-- 底部导航 -->
+    <nav class="bottom-nav">
+      <button class="nav-item active" onclick="navigateTo('home')">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-label">首页</span>
+      </button>
+      <button class="nav-item" onclick="navigateTo('subject')">
+        <span class="nav-icon">📚</span>
+        <span class="nav-label">学习</span>
+      </button>
+      <button class="nav-item" onclick="openParentPanel()">
+        <span class="nav-icon">⚙️</span>
+        <span class="nav-label">家长</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- Toast提示 -->
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
