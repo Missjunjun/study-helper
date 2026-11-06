@@ -39,6 +39,52 @@
     </div>
   </div>
 
+  <!-- 词库管理弹窗 -->
+  <div id="lib-modal" class="modal hidden">
+    <div class="modal-content lib-modal-content">
+      <h2>📚 词库管理</h2>
+      <p class="hint">直接录入单词/生字/课文，保存后立即生效</p>
+
+      <div class="lib-selects">
+        <select id="lib-subject" onchange="App.onLibSubjectChange()">
+          <option value="english">英语</option>
+          <option value="chinese">语文</option>
+        </select>
+        <select id="lib-grade" onchange="App.renderLibList()">
+          <option value="grade3">三年级</option>
+          <option value="grade4" selected>四年级</option>
+          <option value="grade5">五年级</option>
+          <option value="grade6">六年级</option>
+        </select>
+        <select id="lib-type" onchange="App.onLibTypeChange()">
+          <option value="words">词语/生字</option>
+          <option value="texts">课文</option>
+        </select>
+      </div>
+
+      <textarea id="lib-input" rows="6" placeholder="每行一条"></textarea>
+      <div class="lib-format-hint" id="lib-format-hint"></div>
+
+      <div class="lib-actions">
+        <button class="btn btn-primary btn-small" onclick="App.importLibText()">导入这些内容</button>
+        <button class="btn btn-secondary btn-small" onclick="App.fillLibExample()">填入示例</button>
+      </div>
+
+      <div class="lib-list-title">
+        已录入 <span id="lib-count">0</span> 条
+        <button class="lib-clear-btn" onclick="App.clearCustomLib()">全部清空</button>
+      </div>
+      <div class="lib-list" id="lib-list"></div>
+
+      <div class="modal-buttons">
+        <button class="btn btn-secondary" onclick="App.exportLib()">导出备份</button>
+        <button class="btn btn-secondary" onclick="App.triggerImportLib()">导入备份</button>
+        <button class="btn btn-primary" onclick="App.closeLibManager()">关闭</button>
+      </div>
+      <input type="file" id="lib-file-input" accept=".json,application/json" style="display:none" onchange="App.importLibBackup(this)">
+    </div>
+  </div>
+
   <!-- 设置家长密码弹窗 -->
   <div id="set-password-modal" class="modal hidden">
     <div class="modal-content">
@@ -247,6 +293,16 @@
                 <option value="30">每30分钟</option>
                 <option value="45">每45分钟</option>
               </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="parent-section">
+          <h2>📚 词库管理</h2>
+          <div class="setting-card">
+            <div class="setting-row">
+              <span>添加单词 / 生字 / 课文</span>
+              <button class="btn btn-small btn-primary" onclick="openLibManager()">打开</button>
             </div>
           </div>
         </div>
