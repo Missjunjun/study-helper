@@ -1,0 +1,104 @@
+{
+  "grades": {
+    "grade3": {
+      "name": "三年级",
+      "words": [
+        {"word": "apple", "meaning": "苹果", "phonetic": "/ˈæpl/"},
+        {"word": "banana", "meaning": "香蕉", "phonetic": "/bəˈnænə/"},
+        {"word": "cat", "meaning": "猫", "phonetic": "/kæt/"},
+        {"word": "dog", "meaning": "狗", "phonetic": "/dɒɡ/"},
+        {"word": "egg", "meaning": "鸡蛋", "phonetic": "/eɡ/"},
+        {"word": "fish", "meaning": "鱼", "phonetic": "/fɪʃ/"},
+        {"word": "girl", "meaning": "女孩", "phonetic": "/ɡɜːl/"},
+        {"word": "hat", "meaning": "帽子", "phonetic": "/hæt/"},
+        {"word": "ice", "meaning": "冰", "phonetic": "/aɪs/"},
+        {"word": "jump", "meaning": "跳", "phonetic": "/dʒʌmp/"},
+        {"word": "kite", "meaning": "风筝", "phonetic": "/kaɪt/"},
+        {"word": "lion", "meaning": "狮子", "phonetic": "/ˈlaɪən/"},
+        {"word": "monkey", "meaning": "猴子", "phonetic": "/ˈmʌŋki/"},
+        {"word": "nose", "meaning": "鼻子", "phonetic": "/nəʊz/"},
+        {"word": "orange", "meaning": "橙子", "phonetic": "/ˈɒrɪndʒ/"},
+        {"word": "pig", "meaning": "猪", "phonetic": "/pɪɡ/"},
+        {"word": "queen", "meaning": "女王", "phonetic": "/kwiːn/"},
+        {"word": "rabbit", "meaning": "兔子", "phonetic": "/ˈræbɪt/"},
+        {"word": "sun", "meaning": "太阳", "phonetic": "/sʌn/"},
+        {"word": "tiger", "meaning": "老虎", "phonetic": "/ˈtaɪɡə/"}
+      ]
+    },
+    "grade4": {
+      "name": "四年级",
+      "words": [
+        {"word": "beautiful", "meaning": "美丽的", "phonetic": "/ˈbjuːtɪfl/"},
+        {"word": "computer", "meaning": "电脑", "phonetic": "/kəmˈpjuːtə/"},
+        {"word": "different", "meaning": "不同的", "phonetic": "/ˈdɪfrənt/"},
+        {"word": "elephant", "meaning": "大象", "phonetic": "/ˈelɪfənt/"},
+        {"word": "favorite", "meaning": "最喜欢的", "phonetic": "/ˈfeɪvərɪt/"},
+        {"word": "garden", "meaning": "花园", "phonetic": "/ˈɡɑːdn/"},
+        {"word": "happy", "meaning": "快乐的", "phonetic": "/ˈhæpi/"},
+        {"word": "important", "meaning": "重要的", "phonetic": "/ɪmˈpɔːtnt/"},
+        {"word": "kitchen", "meaning": "厨房", "phonetic": "/ˈkɪtʃɪn/"},
+        {"word": "library", "meaning": "图书馆", "phonetic": "/ˈlaɪbrəri/"},
+        {"word": "mountain", "meaning": "山", "phonetic": "/ˈmaʊntɪn/"},
+        {"word": "natural", "meaning": "自然的", "phonetic": "/ˈnætʃrəl/"},
+        {"word": "ocean", "meaning": "海洋", "phonetic": "/ˈəʊʃn/"},
+        {"word": "parent", "meaning": "父母", "phonetic": "/ˈpeərənt/"},
+        {"word": "question", "meaning": "问题", "phonetic": "/ˈkwestʃən/"},
+        {"word": "remember", "meaning": "记住", "phonetic": "/rɪˈmembə/"},
+        {"word": "student", "meaning": "学生", "phonetic": "/ˈstjuːdnt/"},
+        {"word": "teacher", "meaning": "老师", "phonetic": "/ˈtiːtʃə/"},
+        {"word": "umbrella", "meaning": "雨伞", "phonetic": "/ʌmˈbrelə/"},
+        {"word": "village", "meaning": "村庄", "phonetic": "/ˈvɪlɪdʒ/"}
+      ]
+    },
+    "grade5": {
+      "name": "五年级",
+      "words": [
+        {"word": "adventure", "meaning": "冒险", "phonetic": "/ədˈventʃə/"},
+        {"word": "believe", "meaning": "相信", "phonetic": "/bɪˈliːv/"},
+        {"word": "celebrate", "meaning": "庆祝", "phonetic": "/ˈselɪbreɪt/"},
+        {"word": "discover", "meaning": "发现", "phonetic": "/dɪˈskʌvə/"},
+        {"word": "environment", "meaning": "环境", "phonetic": "/ɪnˈvaɪrənmənt/"},
+        {"word": "famous", "meaning": "著名的", "phonetic": "/ˈfeɪməs/"},
+        {"word": "government", "meaning": "政府", "phonetic": "/ˈɡʌvənmənt/"},
+        {"word": "hospital", "meaning": "医院", "phonetic": "/ˈhɒspɪtl/"},
+        {"word": "imagine", "meaning": "想象", "phonetic": "/ɪˈmædʒɪn/"},
+        {"word": "journey", "meaning": "旅程", "phonetic": "/ˈdʒɜːni/"},
+        {"word": "knowledge", "meaning": "知识", "phonetic": "/ˈnɒlɪdʒ/"},
+        {"word": "language", "meaning": "语言", "phonetic": "/ˈlæŋɡwɪdʒ/"},
+        {"word": "mystery", "meaning": "神秘", "phonetic": "/ˈmɪstri/"},
+        {"word": "neighbor", "meaning": "邻居", "phonetic": "/ˈneɪbə/"},
+        {"word": "opportunity", "meaning": "机会", "phonetic": "/ˌɒpəˈtjuːnəti/"},
+        {"word": "patient", "meaning": "耐心的", "phonetic": "/ˈpeɪʃnt/"},
+        {"word": "quality", "meaning": "质量", "phonetic": "/ˈkwɒləti/"},
+        {"word": "realize", "meaning": "意识到", "phonetic": "/ˈrɪəlaɪz/"},
+        {"word": "successful", "meaning": "成功的", "phonetic": "/səkˈsesfl/"},
+        {"word": "technology", "meaning": "技术", "phonetic": "/tekˈnɒlədʒi/"}
+      ]
+    },
+    "grade6": {
+      "name": "六年级",
+      "words": [
+        {"word": "achievement", "meaning": "成就", "phonetic": "/əˈtʃiːvmənt/"},
+        {"word": "benefit", "meaning": "好处", "phonetic": "/ˈbenɪfɪt/"},
+        {"word": "communicate", "meaning": "交流", "phonetic": "/kəˈmjuːnɪkeɪt/"},
+        {"word": "development", "meaning": "发展", "phonetic": "/dɪˈveləpmənt/"},
+        {"word": "education", "meaning": "教育", "phonetic": "/ˌedʒuˈkeɪʃn/"},
+        {"word": "experience", "meaning": "经验", "phonetic": "/ɪkˈspɪəriəns/"},
+        {"word": "freedom", "meaning": "自由", "phonetic": "/ˈfriːdəm/"},
+        {"word": "generous", "meaning": "慷慨的", "phonetic": "/ˈdʒenərəs/"},
+        {"word": "hesitate", "meaning": "犹豫", "phonetic": "/ˈhezɪteɪt/"},
+        {"word": "independent", "meaning": "独立的", "phonetic": "/ˌɪndɪˈpendənt/"},
+        {"word": "journey", "meaning": "旅行", "phonetic": "/ˈdʒɜːni/"},
+        {"word": "kindness", "meaning": "善良", "phonetic": "/ˈkaɪndnəs/"},
+        {"word": "literature", "meaning": "文学", "phonetic": "/ˈlɪtrətʃə/"},
+        {"word": "maturity", "meaning": "成熟", "phonetic": "/məˈtʃʊərəti/"},
+        {"word": "necessity", "meaning": "必要", "phonetic": "/nəˈsesəti/"},
+        {"word": "obstacle", "meaning": "障碍", "phonetic": "/ˈɒbstəkl/"},
+        {"word": "perseverance", "meaning": "毅力", "phonetic": "/ˌpɜːsɪˈvɪərəns/"},
+        {"word": "responsibility", "meaning": "责任", "phonetic": "/rɪˌspɒnsəˈbɪləti/"},
+        {"word": "sincere", "meaning": "真诚的", "phonetic": "/sɪnˈsɪə/"},
+        {"word": "traditional", "meaning": "传统的", "phonetic": "/trəˈdɪʃənl/"}
+      ]
+    }
+  }
+}
