@@ -2,7 +2,7 @@
  * Service Worker - 离线缓存支持
  */
 
-const CACHE_NAME = 'study-helper-v1';
+const CACHE_NAME = 'study-helper-v2';
 const urlsToCache = [
   './',
   './index.html',

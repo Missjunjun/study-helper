@@ -115,6 +115,11 @@
             <div class="subject-name">语文学习</div>
             <div class="subject-desc">生字默写 · 课文背诵</div>
           </div>
+          <div class="subject-card math" onclick="selectSubject('math')">
+            <div class="subject-icon">🧮</div>
+            <div class="subject-name">数学学习</div>
+            <div class="subject-desc">口算练习 · 每日10题</div>
+          </div>
         </div>
 
         <div class="daily-goal">
@@ -138,17 +143,22 @@
         <div class="mode-select hidden" id="mode-select">
           <div class="section-title">选择练习模式</div>
           <div class="mode-grid">
-            <div class="mode-card" onclick="startPractice('word-dictation')">
+            <div class="mode-card" id="word-dictation-card" onclick="startPractice('word-dictation')">
               <div class="mode-icon">📝</div>
               <div class="mode-name">单词默写</div>
               <div class="mode-desc">看中文写单词</div>
             </div>
-            <div class="mode-card" onclick="startPractice('word-practice')">
+            <div class="mode-card" id="word-practice-card" onclick="startPractice('word-practice')">
               <div class="mode-icon">🎯</div>
               <div class="mode-name">单词练习</div>
               <div class="mode-desc">选择正确释义</div>
             </div>
-            <div class="mode-card hidden" id="text-dictation-card" onclick="startPractice('text-dictation')">
+            <div class="mode-card" id="math-mental-card" style="display:none" onclick="startPractice('math-mental')">
+            <div class="mode-icon">🧮</div>
+            <div class="mode-name">口算练习</div>
+            <div class="mode-desc">10道口算题，做完自动批改</div>
+          </div>
+          <div class="mode-card hidden" id="text-dictation-card" onclick="startPractice('text-dictation')">
               <div class="mode-icon">📜</div>
               <div class="mode-name">课文默写</div>
               <div class="mode-desc">段落填空练习</div>
